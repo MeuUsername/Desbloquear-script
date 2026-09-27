@@ -1,439 +1,3371 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Desbloquear</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-
-            font-family: Arial, sans-serif;
-
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .caixa {
-            width: 100%;
-            background: white;
-            padding: 30px 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-
-        h1 {
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-size: 28px;
-        }
-
-        p {
-            font-size: 17px;
-            line-height: 1.5;
-        }
-
-        .botoes {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
-        }
-
-        button {
-            width: 100%;
-            min-height: 55px;
-            padding: 14px 20px;
-
-            border: none;
-            border-radius: 12px;
-
-            background: #667eea;
-            color: white;
-
-            font-size: 17px;
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.2s;
-        }
-
-        button:hover {
-            transform: scale(1.02);
-            opacity: 0.95;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .concluido {
-            background: #28a745 !important;
-        }
-
-        #botaoFinalizar {
-            margin-top: 20px;
-            background: #ff9800;
-            display: none;
-        }
-
-        #botaoVoltar {
-            background: #28a745;
-            display: none;
-        }
-
-        #telaEspera,
-        #telaFinal {
-            display: none;
-        }
-
-        #contador {
-            font-size: 45px;
-            font-weight: bold;
-            margin: 25px 0;
-            color: #667eea;
-        }
-
-        /* Tela de carregamento de 1 segundo */
-        #telaCarregamento {
-            display: none;
-        }
-
-        .spinner {
-            width: 55px;
-            height: 55px;
-            margin: 25px auto;
-
-            border: 6px solid #ddd;
-            border-top: 6px solid #667eea;
-            border-radius: 50%;
-
-            animation: girar 1s linear infinite;
-        }
-
-        @keyframes girar {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .frase {
-            background: #f1f1f1;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-
-            font-size: 18px;
-            line-height: 1.5;
-            word-wrap: break-word;
-        }
-
-        #mensagemCopiado {
-            color: #28a745;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-
-        /* Ajustes para celulares */
-        @media (max-width: 600px) {
-
-            body {
-                padding: 12px;
-            }
-
-            .caixa {
-                padding: 25px 18px;
-                border-radius: 16px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            p {
-                font-size: 16px;
-            }
-
-            button {
-                min-height: 58px;
-                font-size: 16px;
-            }
-
-            #contador {
-                font-size: 40px;
-            }
-        }
-
-        /* Celulares bem pequenos */
-        @media (max-width: 380px) {
-
-            body {
-                padding: 8px;
-            }
-
-            .caixa {
-                padding: 22px 14px;
-            }
-
-            h1 {
-                font-size: 22px;
-            }
-
-            button {
-                font-size: 15px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-
-    <!-- TELA INICIAL -->
-    <div class="caixa" id="telaInicial">
-
-        <h1>Desbloquear</h1>
-
-        <p>
-            Clique nos três botões para continuar.
-        </p>
-
-        <div class="botoes">
-
-            <button id="botao1" onclick="iniciarPasso(1)">
-                Botão 1
-            </button>
-
-            <button id="botao2" onclick="iniciarPasso(2)">
-                Botão 2
-            </button>
-
-            <button id="botao3" onclick="iniciarPasso(3)">
-                Botão 3
-            </button>
-
-        </div>
-
-        <button id="botaoFinalizar" onclick="finalizar()">
-            Finalizar
-        </button>
-
-    </div>
-
-
-    <!-- TELA DE CARREGAMENTO -->
-    <div class="caixa" id="telaCarregamento">
-
-        <h1>Carregando...</h1>
-
-        <div class="spinner"></div>
-
-        <p>
-            Aguarde um momento...
-        </p>
-
-    </div>
-
-
-    <!-- TELA DE ESPERA -->
-    <div class="caixa" id="telaEspera">
-
-        <h1>Aguarde</h1>
-
-        <p>
-            O processo está acontecendo...
-        </p>
-
-        <div id="contador">
-            15
-        </div>
-
-        <p>
-            segundos restantes
-        </p>
-
-        <button id="botaoVoltar" onclick="voltarInicio()">
-            Voltar
-        </button>
-
-    </div>
-
-
-    <!-- TELA FINAL -->
-    <div class="caixa" id="telaFinal">
-
-        <h1>Concluído!</h1>
-
-        <div class="frase" id="frase">
-            Parabéns! Você concluiu todos os passos.
-        </div>
-
-        <button onclick="copiarFrase()">
-            Copiar
-        </button>
-
-        <p id="mensagemCopiado"></p>
-
-    </div>
-
-</div>
-
-
-<script>
-
-    let passoAtual = 0;
-
-    let passosConcluidos = {
-        1: false,
-        2: false,
-        3: false
-    };
-
-
-    // Inicia um botão
-    function iniciarPasso(numero) {
-
-        // Se já foi concluído, não faz nada
-        if (passosConcluidos[numero]) {
-            return;
-        }
-
-        passoAtual = numero;
-
-        // Esconde a tela inicial
-        document.getElementById("telaInicial").style.display = "none";
-
-        // Mostra o carregamento
-        document.getElementById("telaCarregamento").style.display = "block";
-
-        // Carregamento de 1 segundo
-        setTimeout(function() {
-
-            // Esconde carregamento
-            document.getElementById("telaCarregamento").style.display = "none";
-
-            // Mostra tela de espera
-            document.getElementById("telaEspera").style.display = "block";
-
-            iniciarContagem();
-
-        }, 1000);
-    }
-
-
-    // Contagem de 15 segundos
-    function iniciarContagem() {
-
-        let tempo = 15;
-
-        document.getElementById("contador").textContent = tempo;
-
-        document.getElementById("botaoVoltar").style.display = "none";
-
-        let intervalo = setInterval(function() {
-
-            tempo--;
-
-            document.getElementById("contador").textContent = tempo;
-
-            if (tempo <= 0) {
-
-                clearInterval(intervalo);
-
-                document.getElementById("contador").textContent = "✓";
-
-                document.getElementById("botaoVoltar").style.display = "block";
-            }
-
-        }, 1000);
-    }
-
-
-    // Voltar para a tela inicial
-    function voltarInicio() {
-
-        // Marca o botão como concluído
-        passosConcluidos[passoAtual] = true;
-
-        let botao = document.getElementById("botao" + passoAtual);
-
-        botao.classList.add("concluido");
-
-        botao.textContent = "✓ Botão " + passoAtual;
-
-        // Esconde tela de espera
-        document.getElementById("telaEspera").style.display = "none";
-
-        // Mostra tela inicial
-        document.getElementById("telaInicial").style.display = "block";
-
-        // Verifica se todos foram concluídos
-        verificarFinalizacao();
-    }
-
-
-    // Verifica se os três botões foram concluídos
-    function verificarFinalizacao() {
-
-        if (
-            passosConcluidos[1] &&
-            passosConcluidos[2] &&
-            passosConcluidos[3]
-        ) {
-
-            document.getElementById("botaoFinalizar").style.display = "block";
-        }
-    }
-
-
-    // Finalizar
-    function finalizar() {
-
-        document.getElementById("telaInicial").style.display = "none";
-
-        document.getElementById("telaFinal").style.display = "block";
-    }
-
-
-    // Copiar frase
-    function copiarFrase() {
-
-        let frase = document.getElementById("frase").textContent;
-
-        navigator.clipboard.writeText(frase)
-            .then(function() {
-
-                document.getElementById("mensagemCopiado").textContent =
-                    "✓ Frase copiada!";
-
-            })
-            .catch(function() {
-
-                document.getElementById("mensagemCopiado").textContent =
-                    "Não foi possível copiar.";
-
-            });
-    }
-
-</script>
-
-</body>
-</html>
+-- ============================================
+-- HESIZ - TODOS OS ESPs NO BILLBOARDGUI
+-- Suporte R6 e R15 com deteccao automatica
+-- VERSAO DELTA EXECUTOR (SEM IDs) - v5.17
+-- By: ESF7
+-- ADICIONADO v5.5: Nova aba "OUTROS"
+-- ADICIONADO v5.4: Opcao "Salvar ao sair" (aba MISC)
+-- ============================================
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local TweenService = game:GetService("TweenService")
+local StarterGui = game:GetService("StarterGui")
+local HttpService = game:GetService("HttpService")
+
+local Camera = Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+-- ============================================
+-- PROTECAO ANTI-DETECCAO DELTA
+-- ============================================
+local function getHiddenUI()
+	if gethui then
+		return gethui()
+	elseif syn and syn.protect_gui then
+		local gui = Instance.new("ScreenGui")
+		syn.protect_gui(gui)
+		return gui.Parent
+	else
+		local success, result = pcall(function()
+			return game:GetService("CoreGui")
+		end)
+		if success then
+			return result
+		end
+	end
+	return LocalPlayer:WaitForChild("PlayerGui")
+end
+
+local HiddenParent = getHiddenUI()
+
+-- ============================================
+-- CONFIGURACOES
+-- ============================================
+local Config = {
+	ATIVARESP = false,
+	ESPNOME = false,
+	ESPCAIXA = false,
+	ESPLINHA = false,
+	ESPVIDA = false,
+	ESPDISTANCIA = false,
+	ESPCHAMS = false,
+	ESPTIME = false,
+	ATIVARAIMBOT = false,
+	EXIBIR_AIMFOV = false,
+	TEAMCHECK = false,
+	ALVO_AIMBOT = "Cabeca",
+	COR_DO_PAINEL = "Vermelho",
+	COR_ESP = "Vermelho",
+	SPEED_BETA = false,
+	SPIN = false,
+	VOAR_INIMIGO = false,
+	NPC_ESP = false,
+	NPC_AIMBOT = false,
+	HITBOX_ATIVAR = false,
+	HITBOX_NPC = false,
+	HITBOX_TAMANHO = 5,
+	HITBOX_TRANSPARENCIA = 0.5,
+	HITBOX_PARTE = "Cabeça",
+	XRAY = false,
+	TP_STALKER = false,
+	TP_DISTANCIA = 5,
+	LOOP_TP = false,
+	SALVAR_CONFIG = false,
+	PANIC_KEY = Enum.KeyCode.Delete,
+}
+
+-- ============================================
+-- CORES
+-- ============================================
+local Cores = {
+	Vermelho = Color3.fromRGB(200, 0, 0),
+	Azul = Color3.fromRGB(0, 0, 210),
+	Verde = Color3.fromRGB(0, 180, 0),
+	Roxo = Color3.fromRGB(130, 0, 210),
+	Rosa = Color3.fromRGB(255, 0, 200),
+	Ciano = Color3.fromRGB(0, 200, 220),
+	Laranja = Color3.fromRGB(255, 130, 0),
+}
+
+local CorPainel = Cores.Vermelho
+local CorInimigo = Color3.fromRGB(255, 50, 50)
+local CorAliado = Color3.fromRGB(50, 255, 80)
+local CorFov = Color3.fromRGB(255, 255, 255)
+local CorAlvo = Color3.fromRGB(50, 255, 80)
+local CorVida = Color3.fromRGB(0, 255, 80)
+local CorDistancia = Color3.fromRGB(200, 200, 255)
+local CorNPC = Color3.fromRGB(255, 180, 50)
+local CorHitbox = Color3.fromRGB(255, 0, 0)
+local CorSkeleton = Color3.fromRGB(255, 255, 255)
+local CorChams = Color3.fromRGB(255, 50, 50)
+
+-- ============================================
+-- VARIAVEIS DE CONTROLE
+-- ============================================
+local FOV_Radius = 120
+local Precisao = 0.45
+local DistanciaMax = 500
+local VoarAltura = 5
+local AlvoParte = "Head"
+local WalkSpeedPadrao = 16
+local WalkSpeedMod = 100
+
+-- ============================================
+-- PANIC KEY VARIABLES
+-- ============================================
+local PanicAtivado = false
+
+-- ============================================
+-- SALVAR / CARREGAR CONFIGURACOES
+-- ============================================
+local ARQUIVO_CONFIG = "Hesiz_Config.json"
+local temFS = (writefile and readfile and isfile) and true or false
+
+local function salvarConfig()
+	if not temFS or PanicAtivado or not Config.SALVAR_CONFIG then return end
+	pcall(function()
+		local dados = {}
+		for k, v in pairs(Config) do
+			local t = type(v)
+			if t == "boolean" or t == "number" or t == "string" then
+				dados[k] = v
+			end
+		end
+		dados.FOV_Radius = FOV_Radius
+		dados.Precisao = Precisao
+		dados.DistanciaMax = DistanciaMax
+		dados.VoarAltura = VoarAltura
+		writefile(ARQUIVO_CONFIG, HttpService:JSONEncode(dados))
+	end)
+end
+
+local function apagarConfig()
+	if temFS and delfile and isfile(ARQUIVO_CONFIG) then
+		pcall(function() delfile(ARQUIVO_CONFIG) end)
+	end
+end
+
+local function carregarConfig()
+	if not temFS then return end
+	pcall(function()
+		if not isfile(ARQUIVO_CONFIG) then return end
+		local dados = HttpService:JSONDecode(readfile(ARQUIVO_CONFIG))
+		if not dados.SALVAR_CONFIG then return end
+		for k, v in pairs(dados) do
+			if Config[k] ~= nil and type(Config[k]) == type(v) then
+				Config[k] = v
+			end
+		end
+		FOV_Radius = dados.FOV_Radius or FOV_Radius
+		Precisao = dados.Precisao or Precisao
+		DistanciaMax = dados.DistanciaMax or DistanciaMax
+		VoarAltura = dados.VoarAltura or VoarAltura
+		CorPainel = Cores[Config.COR_DO_PAINEL] or CorPainel
+		local mapa = {Cabeca = "Head", Tronco = "UpperTorso", Pe = "LeftFoot"}
+		AlvoParte = mapa[Config.ALVO_AIMBOT] or "Head"
+	end)
+end
+
+carregarConfig()
+
+-- ============================================
+-- DETECCAO DE RIG TYPE
+-- ============================================
+local function detectarRigType(personagem)
+	if not personagem then return "R6" end
+	if personagem:FindFirstChild("UpperTorso") and personagem:FindFirstChild("LowerTorso") then
+		return "R15"
+	end
+	return "R6"
+end
+
+local function getParteAlvo(personagem, parteNome)
+	if not personagem then return nil end
+	local rigType = detectarRigType(personagem)
+	local mapeamento = {
+		R15 = {
+			Cabeca = "Head", Tronco = "UpperTorso", Peito = "UpperTorso", Quadril = "LowerTorso",
+			BracoEsquerdo = "LeftUpperArm", AntebracoEsquerdo = "LeftLowerArm", MaoEsquerda = "LeftHand",
+			BracoDireito = "RightUpperArm", AntebracoDireito = "RightLowerArm", MaoDireita = "RightHand",
+			PernaEsquerda = "LeftUpperLeg", CanelaEsquerda = "LeftLowerLeg", PeEsquerdo = "LeftFoot",
+			PernaDireita = "RightUpperLeg", CanelaDireita = "RightLowerLeg", PeDireito = "RightFoot",
+			Raiz = "HumanoidRootPart", Pescoco = "Head",
+		},
+		R6 = {
+			Cabeca = "Head", Tronco = "Torso", Peito = "Torso", Quadril = "Torso",
+			BracoEsquerdo = "Left Arm", AntebracoEsquerdo = "Left Arm", MaoEsquerda = "Left Arm",
+			BracoDireito = "Right Arm", AntebracoDireito = "Right Arm", MaoDireita = "Right Arm",
+			PernaEsquerda = "Left Leg", CanelaEsquerda = "Left Leg", PeEsquerdo = "Left Leg",
+			PernaDireita = "Right Leg", CanelaDireita = "Right Leg", PeDireito = "Right Leg",
+			Raiz = "HumanoidRootPart", Pescoco = "Head",
+		}
+	}
+	local parte = personagem:FindFirstChild(parteNome)
+	if parte then return parte end
+	local nomeMapeado = mapeamento[rigType][parteNome]
+	if nomeMapeado then
+		parte = personagem:FindFirstChild(nomeMapeado)
+		if parte then return parte end
+	end
+	if parteNome == "Tronco" or parteNome == "Torso" or parteNome == "UpperTorso" then
+		return personagem:FindFirstChild("Torso") or personagem:FindFirstChild("UpperTorso")
+	elseif parteNome == "Pe" or parteNome == "LeftFoot" or parteNome == "Left Leg" then
+		if rigType == "R15" then
+			return personagem:FindFirstChild("LeftFoot") or personagem:FindFirstChild("LeftLowerLeg") or personagem:FindFirstChild("HumanoidRootPart")
+		else
+			return personagem:FindFirstChild("Left Leg") or personagem:FindFirstChild("HumanoidRootPart")
+		end
+	elseif parteNome == "Cabeca" or parteNome == "Head" then
+		return personagem:FindFirstChild("Head")
+	end
+	return personagem:FindFirstChild("HumanoidRootPart") or personagem:FindFirstChild("Torso") or personagem:FindFirstChild("UpperTorso")
+end
+
+-- ============================================
+-- FUNCOES PARA DETECTAR NPCs
+-- ============================================
+local function isNPC(model)
+	if not model or not model:IsA("Model") then return false end
+	local player = Players:GetPlayerFromCharacter(model)
+	if player then return false end
+	local humanoid = model:FindFirstChildOfClass("Humanoid")
+	if not humanoid then return false end
+	local hrp = model:FindFirstChild("HumanoidRootPart") or model:FindFirstChild("Torso") or model:FindFirstChild("UpperTorso")
+	local head = model:FindFirstChild("Head")
+	if not hrp or not head then return false end
+	return true
+end
+
+local NPCsCache = {}
+local UltimaAtualizacaoNPCs = 0
+
+local function getNPCs()
+	local agora = tick()
+	if agora - UltimaAtualizacaoNPCs < 2 then
+		return NPCsCache
+	end
+	local npcs = {}
+	for _, obj in pairs(Workspace:GetDescendants()) do
+		if isNPC(obj) then
+			table.insert(npcs, obj)
+		end
+	end
+	NPCsCache = npcs
+	UltimaAtualizacaoNPCs = agora
+	return npcs
+end
+
+-- ============================================
+-- FUNCAO: VERIFICAR SE ESTA VIVO
+-- ============================================
+local function estaVivo(jogador)
+	if not jogador then return false end
+	local personagem = jogador.Character
+	if not personagem then return false end
+	local humanoid = personagem:FindFirstChildOfClass("Humanoid")
+	if not humanoid then return false end
+	if humanoid.Health <= 0 then return false end
+	if not personagem.Parent then return false end
+	if humanoid:GetState() == Enum.HumanoidStateType.Dead then return false end
+	return true
+end
+
+local function estaVivoNPC(npc)
+	if not npc or not npc.Parent then return false end
+	local humanoid = npc:FindFirstChildOfClass("Humanoid")
+	if not humanoid then return false end
+	if humanoid.Health <= 0 then return false end
+	if humanoid:GetState() == Enum.HumanoidStateType.Dead then return false end
+	return true
+end
+
+-- ============================================
+-- CRIAR SCREENGUI
+-- ============================================
+pcall(function()
+	for _, gui in pairs(HiddenParent:GetChildren()) do
+		if gui:IsA("ScreenGui") and gui.Name:match("HesizGui_") then
+			gui:Destroy()
+		end
+	end
+	for _, gui in pairs(LocalPlayer.PlayerGui:GetChildren()) do
+		if gui:IsA("ScreenGui") and gui.Name:match("HesizGui_") then
+			gui:Destroy()
+		end
+	end
+end)
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "HesizGui_" .. tostring(math.random(1000, 9999))
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.DisplayOrder = 999
+
+pcall(function()
+	ScreenGui.Parent = HiddenParent
+end)
+
+if not ScreenGui.Parent then
+	ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
+
+-- ============================================
+-- ESP SYSTEM
+-- ============================================
+local ESP_Objects = {}
+local ESP_NPCs = {}
+local ESP_Linhas = {}
+
+-- ============================================
+-- SKELETON ESP SYSTEM
+-- ============================================
+local Skeleton_Linhas = {}
+local Skeleton_NPCs = {}
+local SkeletonPersonagemRef = {}
+
+local SkeletonConexoes = {
+	R15 = {
+		{"Head", "UpperTorso"},
+		{"Head", "LeftUpperArm"},
+		{"Head", "RightUpperArm"},
+		{"UpperTorso", "LowerTorso"},
+		{"UpperTorso", "LeftUpperArm"},
+		{"LeftUpperArm", "LeftLowerArm"},
+		{"LeftLowerArm", "LeftHand"},
+		{"UpperTorso", "RightUpperArm"},
+		{"RightUpperArm", "RightLowerArm"},
+		{"RightLowerArm", "RightHand"},
+		{"LowerTorso", "LeftUpperLeg"},
+		{"LeftUpperLeg", "LeftLowerLeg"},
+		{"LeftLowerLeg", "LeftFoot"},
+		{"LowerTorso", "RightUpperLeg"},
+		{"RightUpperLeg", "RightLowerLeg"},
+		{"RightLowerLeg", "RightFoot"},
+	},
+	R6 = {
+		{"Head", "Torso"},
+		{"Head", "Left Arm"},
+		{"Head", "Right Arm"},
+		{"Torso", "Left Arm"},
+		{"Torso", "Right Arm"},
+		{"Torso", "Left Leg"},
+		{"Torso", "Right Leg"},
+	}
+}
+
+local function criarLinhaSkeleton()
+	local linha = Instance.new("Frame")
+	linha.Name = "SkeletonLine"
+	linha.AnchorPoint = Vector2.new(0.5, 0.5)
+	linha.BackgroundColor3 = CorSkeleton
+	linha.BorderSizePixel = 0
+	linha.ZIndex = 4
+	linha.Visible = false
+	linha.Parent = ScreenGui
+	return linha
+end
+
+local function destruirSkeletonJogador(jogador)
+	if Skeleton_Linhas[jogador] then
+		for _, linha in pairs(Skeleton_Linhas[jogador]) do
+			pcall(function() linha:Destroy() end)
+		end
+		Skeleton_Linhas[jogador] = nil
+	end
+	SkeletonPersonagemRef[jogador] = nil
+end
+
+local function destruirSkeletonNPC(npc)
+	if Skeleton_NPCs[npc] then
+		for _, linha in pairs(Skeleton_NPCs[npc]) do
+			pcall(function() linha:Destroy() end)
+		end
+		Skeleton_NPCs[npc] = nil
+	end
+end
+
+local function personagemValidoSkeleton(personagem)
+	if not personagem or not personagem.Parent then return false end
+	local humanoid = personagem:FindFirstChildOfClass("Humanoid")
+	if not humanoid or humanoid.Health <= 0 then return false end
+	return true
+end
+
+local function atualizarSkeleton(jogador, cor)
+	if not jogador or not jogador.Parent then
+		destruirSkeletonJogador(jogador)
+		return
+	end
+
+	local personagem = jogador.Character
+	if not personagemValidoSkeleton(personagem) then
+		destruirSkeletonJogador(jogador)
+		return
+	end
+
+	local personagemAnterior = SkeletonPersonagemRef[jogador]
+	if personagemAnterior and personagemAnterior ~= personagem then
+		destruirSkeletonJogador(jogador)
+	end
+	SkeletonPersonagemRef[jogador] = personagem
+
+	if not Config.ATIVARESP or not Config.ESPSKELETON then
+		destruirSkeletonJogador(jogador)
+		return
+	end
+
+	local rigType = detectarRigType(personagem)
+	local conexoes = SkeletonConexoes[rigType] or SkeletonConexoes.R6
+
+	if not Skeleton_Linhas[jogador] then
+		Skeleton_Linhas[jogador] = {}
+	end
+
+	for i, conexao in ipairs(conexoes) do
+		local parte1 = personagem:FindFirstChild(conexao[1])
+		local parte2 = personagem:FindFirstChild(conexao[2])
+
+		if not parte1 or not parte2 or not parte1.Parent or not parte2.Parent then
+			if Skeleton_Linhas[jogador][i] then
+				pcall(function() Skeleton_Linhas[jogador][i]:Destroy() end)
+				Skeleton_Linhas[jogador][i] = nil
+			end
+		else
+			local pos1, vis1 = Camera:WorldToViewportPoint(parte1.Position)
+			local pos2, vis2 = Camera:WorldToViewportPoint(parte2.Position)
+			if not vis1 or not vis2 or pos1.Z < 0 or pos2.Z < 0 then
+				if Skeleton_Linhas[jogador][i] then
+					Skeleton_Linhas[jogador][i].Visible = false
+				end
+			else
+				local linha = Skeleton_Linhas[jogador][i]
+				if not linha or not linha.Parent then
+					linha = criarLinhaSkeleton()
+					Skeleton_Linhas[jogador][i] = linha
+				end
+
+				local origem = Vector2.new(pos1.X, pos1.Y)
+				local alvo = Vector2.new(pos2.X, pos2.Y)
+				local direcao = alvo - origem
+				local distancia = direcao.Magnitude
+
+				if distancia < 1 then
+					linha.Visible = false
+				else
+					local angulo = math.deg(math.atan2(direcao.Y, direcao.X))
+					local centro = origem + (direcao / 2)
+
+					linha.Size = UDim2.new(0, distancia, 0, 1.2)
+					linha.Position = UDim2.new(0, centro.X, 0, centro.Y)
+					linha.Rotation = angulo
+					linha.BackgroundColor3 = cor
+					linha.Visible = true
+				end
+			end
+		end
+	end
+end
+
+local function atualizarSkeletonNPC(npc)
+	if not npc or not npc.Parent or not personagemValidoSkeleton(npc) then
+		destruirSkeletonNPC(npc)
+		return
+	end
+
+	if not Config.ATIVARESP or not Config.ESPSKELETON or not Config.NPC_ESP then
+		destruirSkeletonNPC(npc)
+		return
+	end
+
+	local rigType = detectarRigType(npc)
+	local conexoes = SkeletonConexoes[rigType] or SkeletonConexoes.R6
+
+	if not Skeleton_NPCs[npc] then
+		Skeleton_NPCs[npc] = {}
+	end
+
+	for i, conexao in ipairs(conexoes) do
+		local parte1 = npc:FindFirstChild(conexao[1])
+		local parte2 = npc:FindFirstChild(conexao[2])
+
+		if not parte1 or not parte2 or not parte1.Parent or not parte2.Parent then
+			if Skeleton_NPCs[npc][i] then
+				pcall(function() Skeleton_NPCs[npc][i]:Destroy() end)
+				Skeleton_NPCs[npc][i] = nil
+			end
+		else
+			local pos1, vis1 = Camera:WorldToViewportPoint(parte1.Position)
+			local pos2, vis2 = Camera:WorldToViewportPoint(parte2.Position)
+			if not vis1 or not vis2 or pos1.Z < 0 or pos2.Z < 0 then
+				if Skeleton_NPCs[npc][i] then
+					Skeleton_NPCs[npc][i].Visible = false
+				end
+			else
+				local linha = Skeleton_NPCs[npc][i]
+				if not linha or not linha.Parent then
+					linha = criarLinhaSkeleton()
+					Skeleton_NPCs[npc][i] = linha
+				end
+
+				local origem = Vector2.new(pos1.X, pos1.Y)
+				local alvo = Vector2.new(pos2.X, pos2.Y)
+				local direcao = alvo - origem
+				local distancia = direcao.Magnitude
+
+				if distancia < 1 then
+					linha.Visible = false
+				else
+					local angulo = math.deg(math.atan2(direcao.Y, direcao.X))
+					local centro = origem + (direcao / 2)
+
+					linha.Size = UDim2.new(0, distancia, 0, 1.2)
+					linha.Position = UDim2.new(0, centro.X, 0, centro.Y)
+					linha.Rotation = angulo
+					linha.BackgroundColor3 = CorNPC
+					linha.Visible = true
+				end
+			end
+		end
+	end
+end
+
+-- ============================================
+-- CHAMS SYSTEM
+-- ============================================
+local ChamsObjects = {}
+local ChamsNPCs = {}
+local ChamsPersonagemRef = {}
+local ChamsNPCRef = {}
+
+local function criarChams(personagem)
+	local parts = {}
+	for _, parte in pairs(personagem:GetDescendants()) do
+		if parte:IsA("BasePart") and parte.Name ~= "HumanoidRootPart" then
+			local highlight = Instance.new("Highlight")
+			highlight.Name = "HesizChams"
+			highlight.Adornee = parte
+			highlight.FillColor = CorChams
+			highlight.OutlineColor = Color3.new(0, 0, 0)
+			highlight.FillTransparency = 0.5
+			highlight.OutlineTransparency = 0.8
+			highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+			highlight.Parent = ScreenGui
+			table.insert(parts, highlight)
+		end
+	end
+	return parts
+end
+
+local function destruirChamsJogador(jogador)
+	if ChamsObjects[jogador] then
+		for _, cham in pairs(ChamsObjects[jogador]) do
+			pcall(function() cham:Destroy() end)
+		end
+		ChamsObjects[jogador] = nil
+	end
+	ChamsPersonagemRef[jogador] = nil
+end
+
+local function destruirChamsNPC(npc)
+	if ChamsNPCs[npc] then
+		for _, cham in pairs(ChamsNPCs[npc]) do
+			pcall(function() cham:Destroy() end)
+		end
+		ChamsNPCs[npc] = nil
+	end
+	ChamsNPCRef[npc] = nil
+end
+
+local function atualizarChams(jogador, cor)
+	local personagem = jogador.Character
+
+	if not personagem or not personagem.Parent then
+		destruirChamsJogador(jogador)
+		return
+	end
+
+	local humanoid = personagem:FindFirstChildOfClass("Humanoid")
+	if not humanoid or humanoid.Health <= 0 then
+		destruirChamsJogador(jogador)
+		return
+	end
+
+	if not Config.ATIVARESP or not Config.ESPCHAMS then
+		destruirChamsJogador(jogador)
+		return
+	end
+
+	local personagemAtual = jogador.Character
+	local personagemAnterior = ChamsPersonagemRef[jogador]
+
+	if personagemAtual ~= personagemAnterior then
+		if ChamsObjects[jogador] then
+			for _, cham in pairs(ChamsObjects[jogador]) do
+				pcall(function() cham:Destroy() end)
+			end
+			ChamsObjects[jogador] = nil
+		end
+		ChamsPersonagemRef[jogador] = personagemAtual
+	end
+
+	if not ChamsObjects[jogador] or #ChamsObjects[jogador] == 0 then
+		ChamsObjects[jogador] = criarChams(personagemAtual)
+		ChamsPersonagemRef[jogador] = personagemAtual
+	end
+
+	for _, cham in pairs(ChamsObjects[jogador]) do
+		pcall(function()
+			if cham.Adornee and cham.Adornee.Parent then
+				cham.FillColor = cor
+				cham.Enabled = true
+			else
+				destruirChamsJogador(jogador)
+			end
+		end)
+	end
+end
+
+local function atualizarChamsNPC(npc)
+	if not npc or not npc.Parent then
+		destruirChamsNPC(npc)
+		return
+	end
+
+	local humanoid = npc:FindFirstChildOfClass("Humanoid")
+	if not humanoid or humanoid.Health <= 0 then
+		destruirChamsNPC(npc)
+		return
+	end
+
+	if not Config.ATIVARESP or not Config.ESPCHAMS or not Config.NPC_ESP then
+		destruirChamsNPC(npc)
+		return
+	end
+
+	local npcAnterior = ChamsNPCRef[npc]
+
+	if npc ~= npcAnterior then
+		if ChamsNPCs[npc] then
+			for _, cham in pairs(ChamsNPCs[npc]) do
+				pcall(function() cham:Destroy() end)
+			end
+			ChamsNPCs[npc] = nil
+		end
+		ChamsNPCRef[npc] = npc
+	end
+
+	if not ChamsNPCs[npc] or #ChamsNPCs[npc] == 0 then
+		ChamsNPCs[npc] = criarChams(npc)
+		ChamsNPCRef[npc] = npc
+	end
+
+	for _, cham in pairs(ChamsNPCs[npc]) do
+		pcall(function()
+			if cham.Adornee and cham.Adornee.Parent then
+				cham.FillColor = CorNPC
+				cham.Enabled = true
+			else
+				destruirChamsNPC(npc)
+			end
+		end)
+	end
+end
+
+-- ============================================
+-- ESP LINHA (TRACER)
+-- ============================================
+local function criarLinhaESP()
+	local linha = Instance.new("Frame")
+	linha.Name = "ESPLinha"
+	linha.AnchorPoint = Vector2.new(0.5, 0.5)
+	linha.BackgroundColor3 = CorInimigo
+	linha.BorderSizePixel = 0
+	linha.ZIndex = 5
+	linha.Visible = false
+	linha.Parent = ScreenGui
+
+	local stroke = Instance.new("UIStroke", linha)
+	stroke.Color = CorInimigo
+	stroke.Thickness = 0.8
+
+	return linha
+end
+
+local function destruirLinhaESP(jogador)
+	if ESP_Linhas[jogador] then
+		pcall(function() ESP_Linhas[jogador]:Destroy() end)
+		ESP_Linhas[jogador] = nil
+	end
+end
+
+local function getPosicaoTopoESPBox(personagem)
+	if not personagem then return nil end
+	local hrp = getParteAlvo(personagem, "Raiz")
+	if not hrp then return nil end
+
+	local hrpPos, hrpOnScreen = Camera:WorldToViewportPoint(hrp.Position)
+	if not hrpOnScreen or hrpPos.Z < 0 then return nil end
+
+	local posicaoTopoBox = hrp.Position + Vector3.new(0, 3, 0)
+	local telaPos, onScreen = Camera:WorldToViewportPoint(posicaoTopoBox)
+
+	if not onScreen or telaPos.Z < 0 then return nil end
+
+	return Vector2.new(telaPos.X, telaPos.Y)
+end
+
+local function atualizarLinhaESP(jogador, cor, posicaoBox)
+	if not Config.ESPLINHA then
+		if ESP_Linhas[jogador] then
+			ESP_Linhas[jogador].Visible = false
+		end
+		return
+	end
+
+	local linha = ESP_Linhas[jogador]
+	if not linha then
+		linha = criarLinhaESP()
+		ESP_Linhas[jogador] = linha
+	end
+
+	if not Config.ATIVARESP then
+		linha.Visible = false
+		return
+	end
+
+	if not posicaoBox then
+		linha.Visible = false
+		return
+	end
+
+	local tela = Camera.ViewportSize
+	local origem = Vector2.new(tela.X / 2, 0)
+
+	local alvo = Vector2.new(posicaoBox.X, posicaoBox.Y)
+	local direcao = alvo - origem
+	local distancia = direcao.Magnitude
+
+	if distancia < 2 then
+		linha.Visible = false
+		return
+	end
+
+	local angulo = math.deg(math.atan2(direcao.Y, direcao.X))
+	local centroLinha = origem + (direcao / 2)
+
+	linha.Size = UDim2.new(0, distancia, 0, 0.8)
+	linha.Position = UDim2.new(0, centroLinha.X, 0, centroLinha.Y)
+	linha.Rotation = angulo
+	linha.BackgroundColor3 = cor
+
+	pcall(function()
+		if linha:FindFirstChild("UIStroke") then
+			linha.UIStroke.Color = cor
+		end
+	end)
+
+	linha.Visible = true
+end
+
+local function destruirESP(jogador)
+	local esp = ESP_Objects[jogador]
+	if not esp then return end
+
+	pcall(function()
+		if esp.Container and esp.Container.Parent then
+			esp.Container:Destroy()
+		end
+	end)
+
+	ESP_Objects[jogador] = nil
+	destruirLinhaESP(jogador)
+	destruirSkeletonJogador(jogador)
+	destruirChamsJogador(jogador)
+end
+
+local function destruirESPNPC(npc)
+	local esp = ESP_NPCs[npc]
+	if not esp then return end
+
+	pcall(function()
+		if esp.Container and esp.Container.Parent then
+			esp.Container:Destroy()
+		end
+	end)
+
+	ESP_NPCs[npc] = nil
+	destruirSkeletonNPC(npc)
+	destruirChamsNPC(npc)
+end
+
+local function criarESP(jogador)
+	destruirESP(jogador)
+	local personagem = jogador.Character
+	if not personagem then return end
+	local hrp = getParteAlvo(personagem, "Raiz")
+	local cabeca = getParteAlvo(personagem, "Cabeca")
+	if not hrp or not cabeca then return end
+
+	pcall(function()
+		local container = Instance.new("BillboardGui")
+		container.Name = jogador.Name .. "_ESP"
+		container.Adornee = hrp
+		container.Size = UDim2.new(8, 0, 10, 0)
+		container.StudsOffset = Vector3.new(0, 0, 0)
+		container.AlwaysOnTop = true
+		container.Parent = ScreenGui
+		container.Enabled = false
+		container.LightInfluence = 0
+		container.MaxDistance = 2000
+
+		local boxFrame = Instance.new("Frame")
+		boxFrame.Name = "Box"
+		boxFrame.Size = UDim2.new(0.5, 0, 0.6, 0)
+		boxFrame.Position = UDim2.new(0.25, 0, 0.2, 0)
+		boxFrame.BackgroundTransparency = 1
+		boxFrame.BorderSizePixel = 0
+		boxFrame.Visible = false
+		boxFrame.Parent = container
+
+		local boxStroke = Instance.new("UIStroke")
+		boxStroke.Color = CorInimigo
+		boxStroke.Thickness = 2
+		boxStroke.Parent = boxFrame
+
+		local nomeLabel = Instance.new("TextLabel")
+		nomeLabel.Name = "NomeESP"
+		nomeLabel.Size = UDim2.new(0.8, 0, 0.08, 0)
+		nomeLabel.Position = UDim2.new(0.1, 0, 0.08, 0)
+		nomeLabel.BackgroundTransparency = 1
+		nomeLabel.Text = jogador.DisplayName
+		nomeLabel.TextColor3 = CorInimigo
+		nomeLabel.TextSize = 14
+		nomeLabel.Font = Enum.Font.SourceSansBold
+		nomeLabel.TextStrokeTransparency = 0.3
+		nomeLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+		nomeLabel.Visible = false
+		nomeLabel.Parent = container
+		nomeLabel.ZIndex = 10
+
+		local timeLabel = Instance.new("TextLabel")
+		timeLabel.Name = "TimeESP"
+		timeLabel.Size = UDim2.new(0.8, 0, 0.06, 0)
+		timeLabel.Position = UDim2.new(0.1, 0, 0.01, 0)
+		timeLabel.BackgroundTransparency = 1
+		timeLabel.Text = ""
+		timeLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
+		timeLabel.TextSize = 11
+		timeLabel.Font = Enum.Font.SourceSansBold
+		timeLabel.TextStrokeTransparency = 0.3
+		timeLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+		timeLabel.Visible = false
+		timeLabel.Parent = container
+		timeLabel.ZIndex = 10
+
+		local distanciaLabel = Instance.new("TextLabel")
+		distanciaLabel.Name = "DistanciaESP"
+		distanciaLabel.Size = UDim2.new(0.8, 0, 0.07, 0)
+		distanciaLabel.Position = UDim2.new(0.1, 0, 0.16, 0)
+		distanciaLabel.BackgroundTransparency = 1
+		distanciaLabel.Text = "0m"
+		distanciaLabel.TextColor3 = CorDistancia
+		distanciaLabel.TextSize = 12
+		distanciaLabel.Font = Enum.Font.SourceSansBold
+		distanciaLabel.TextStrokeTransparency = 0.3
+		distanciaLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+		distanciaLabel.Visible = false
+		distanciaLabel.Parent = container
+		distanciaLabel.ZIndex = 10
+
+		local vidaContainer = Instance.new("Frame")
+		vidaContainer.Name = "VidaESP"
+		vidaContainer.Size = UDim2.new(0.08, 0, 0.5, 0)
+		vidaContainer.Position = UDim2.new(0.84, 0, 0.25, 0)
+		vidaContainer.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+		vidaContainer.BorderSizePixel = 0
+		vidaContainer.Visible = false
+		vidaContainer.Parent = container
+		vidaContainer.ZIndex = 10
+
+		local vidaFill = Instance.new("Frame")
+		vidaFill.Name = "VidaFill"
+		vidaFill.Size = UDim2.new(1, 0, 1, 0)
+		vidaFill.Position = UDim2.new(0, 0, 0, 0)
+		vidaFill.BackgroundColor3 = CorVida
+		vidaFill.BorderSizePixel = 0
+		vidaFill.Parent = vidaContainer
+		vidaFill.ZIndex = 11
+
+		ESP_Objects[jogador] = {
+			Container = container,
+			Box = boxFrame,
+			BoxStroke = boxStroke,
+			Nome = nomeLabel,
+			Time = timeLabel,
+			Distancia = distanciaLabel,
+			Vida = vidaContainer,
+			VidaFill = vidaFill,
+			personagem = personagem,
+			hrp = hrp,
+			cabeca = cabeca,
+		}
+	end)
+end
+
+local function criarESPNPC(npc)
+	destruirESPNPC(npc)
+	if not npc or not npc.Parent then return end
+	local hrp = getParteAlvo(npc, "Raiz")
+	local cabeca = getParteAlvo(npc, "Cabeca")
+	if not hrp or not cabeca then return end
+
+	pcall(function()
+		local container = Instance.new("BillboardGui")
+		container.Name = npc.Name .. "_NPC_ESP"
+		container.Adornee = hrp
+		container.Size = UDim2.new(8, 0, 10, 0)
+		container.StudsOffset = Vector3.new(0, 0, 0)
+		container.AlwaysOnTop = true
+		container.Parent = ScreenGui
+		container.Enabled = false
+		container.LightInfluence = 0
+		container.MaxDistance = 2000
+
+		local boxFrame = Instance.new("Frame")
+		boxFrame.Name = "Box"
+		boxFrame.Size = UDim2.new(0.5, 0, 0.6, 0)
+		boxFrame.Position = UDim2.new(0.25, 0, 0.2, 0)
+		boxFrame.BackgroundTransparency = 1
+		boxFrame.BorderSizePixel = 0
+		boxFrame.Visible = false
+		boxFrame.Parent = container
+
+		local boxStroke = Instance.new("UIStroke")
+		boxStroke.Color = CorNPC
+		boxStroke.Thickness = 2
+		boxStroke.Parent = boxFrame
+
+		local nomeLabel = Instance.new("TextLabel")
+		nomeLabel.Name = "NomeESP"
+		nomeLabel.Size = UDim2.new(0.8, 0, 0.08, 0)
+		nomeLabel.Position = UDim2.new(0.1, 0, 0.08, 0)
+		nomeLabel.BackgroundTransparency = 1
+		nomeLabel.Text = "[NPC] " .. npc.Name
+		nomeLabel.TextColor3 = CorNPC
+		nomeLabel.TextSize = 14
+		nomeLabel.Font = Enum.Font.SourceSansBold
+		nomeLabel.TextStrokeTransparency = 0.3
+		nomeLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+		nomeLabel.Visible = false
+		nomeLabel.Parent = container
+		nomeLabel.ZIndex = 10
+
+		local distanciaLabel = Instance.new("TextLabel")
+		distanciaLabel.Name = "DistanciaESP"
+		distanciaLabel.Size = UDim2.new(0.8, 0, 0.07, 0)
+		distanciaLabel.Position = UDim2.new(0.1, 0, 0.16, 0)
+		distanciaLabel.BackgroundTransparency = 1
+		distanciaLabel.Text = "0m"
+		distanciaLabel.TextColor3 = CorDistancia
+		distanciaLabel.TextSize = 12
+		distanciaLabel.Font = Enum.Font.SourceSansBold
+		distanciaLabel.TextStrokeTransparency = 0.3
+		distanciaLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+		distanciaLabel.Visible = false
+		distanciaLabel.Parent = container
+		distanciaLabel.ZIndex = 10
+
+		local vidaContainer = Instance.new("Frame")
+		vidaContainer.Name = "VidaESP"
+		vidaContainer.Size = UDim2.new(0.08, 0, 0.5, 0)
+		vidaContainer.Position = UDim2.new(0.84, 0, 0.25, 0)
+		vidaContainer.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+		vidaContainer.BorderSizePixel = 0
+		vidaContainer.Visible = false
+		vidaContainer.Parent = container
+		vidaContainer.ZIndex = 10
+
+		local vidaFill = Instance.new("Frame")
+		vidaFill.Name = "VidaFill"
+		vidaFill.Size = UDim2.new(1, 0, 1, 0)
+		vidaFill.Position = UDim2.new(0, 0, 0, 0)
+		vidaFill.BackgroundColor3 = CorVida
+		vidaFill.BorderSizePixel = 0
+		vidaFill.Parent = vidaContainer
+		vidaFill.ZIndex = 11
+
+		ESP_NPCs[npc] = {
+			Container = container,
+			Box = boxFrame,
+			BoxStroke = boxStroke,
+			Nome = nomeLabel,
+			Distancia = distanciaLabel,
+			Vida = vidaContainer,
+			VidaFill = vidaFill,
+			personagem = npc,
+			hrp = hrp,
+			cabeca = cabeca,
+		}
+	end)
+end
+
+-- ============================================
+-- SISTEMA DE VIDA ADAPTATIVO (ESP Vida)
+-- Detecta automaticamente sistemas de vida customizados
+-- (leaderstats, Values dentro do personagem/player, Attributes),
+-- alem do Humanoid padrao do Roblox.
+-- ============================================
+local VidaCache = setmetatable({}, {__mode = "k"})
+
+local NOMES_VIDA = {
+	"Health", "Hp", "HP", "Vida", "VidaAtual", "CurrentHealth", "CurHealth",
+	"Life", "CurrentHP", "CurHP", "Saude", "Energy", "Shield",
+}
+local NOMES_VIDA_MAX = {
+	"MaxHealth", "MaxHp", "MaxHP", "VidaMaxima", "MaximumHealth", "MaxLife",
+	"FullHealth", "TotalHealth", "MaxSaude", "MaxEnergy", "MaxShield",
+}
+
+local function procurarValorEm(inst, nomes)
+	if not inst then return nil end
+	for _, nome in ipairs(nomes) do
+		local ok, v = pcall(function() return inst:FindFirstChild(nome) end)
+		if ok and v and (v:IsA("NumberValue") or v:IsA("IntValue") or v:IsA("DoubleConstrainedValue")) then
+			return v
+		end
+	end
+	return nil
+end
+
+local function procurarAtributoEm(inst, nomes)
+	if not inst then return nil end
+	for _, nome in ipairs(nomes) do
+		local ok, v = pcall(function() return inst:GetAttribute(nome) end)
+		if ok and type(v) == "number" then return nome end
+	end
+	return nil
+end
+
+-- Monta, uma unica vez por personagem, a "fonte" de onde ler a vida.
+-- Prioridade: Value objects (leaderstats/Stats/personagem/player) > Attributes > Humanoid padrao.
+local function construirFonteVida(jogadorOuNil, personagem)
+	if not personagem then return nil end
+	local humanoid = personagem:FindFirstChildOfClass("Humanoid")
+
+	local locais = {
+		personagem,
+		personagem:FindFirstChild("Stats"),
+		personagem:FindFirstChild("Status"),
+		personagem:FindFirstChild("Data"),
+	}
+	if jogadorOuNil then
+		table.insert(locais, jogadorOuNil)
+		table.insert(locais, jogadorOuNil:FindFirstChild("leaderstats"))
+		table.insert(locais, jogadorOuNil:FindFirstChild("Stats"))
+		table.insert(locais, jogadorOuNil:FindFirstChild("Data"))
+	end
+
+	for _, local_ in ipairs(locais) do
+		local hv = procurarValorEm(local_, NOMES_VIDA)
+		if hv then
+			local mv = procurarValorEm(local_, NOMES_VIDA_MAX)
+			return {
+				obterAtual = function() return hv.Value end,
+				obterMax = function()
+					if mv then return mv.Value end
+					return nil
+				end,
+			}
+		end
+	end
+
+	local locaisAttr = {humanoid, personagem, jogadorOuNil}
+	for _, local_ in ipairs(locaisAttr) do
+		if local_ then
+			local nomeAttr = procurarAtributoEm(local_, NOMES_VIDA)
+			if nomeAttr then
+				local nomeMax = procurarAtributoEm(local_, NOMES_VIDA_MAX)
+				return {
+					obterAtual = function() return local_:GetAttribute(nomeAttr) end,
+					obterMax = function()
+						if nomeMax then return local_:GetAttribute(nomeMax) end
+						return nil
+					end,
+				}
+			end
+		end
+	end
+
+	if humanoid then
+		return {
+			obterAtual = function() return humanoid.Health end,
+			obterMax = function() return humanoid.MaxHealth end,
+		}
+	end
+
+	return nil
+end
+
+-- Retorna (vidaAtual, vidaMaxima) usando a fonte detectada; cacheada por personagem.
+local function obterVida(jogadorOuNil, personagem, humanoid)
+	if not personagem then return nil, nil end
+
+	for tentativa = 1, 2 do
+		local fonte = VidaCache[personagem]
+		if fonte == nil then
+			fonte = construirFonteVida(jogadorOuNil, personagem) or false
+			VidaCache[personagem] = fonte
+		end
+
+		if fonte == false then
+			if humanoid then
+				local ok, atual = pcall(function() return humanoid.Health end)
+				local ok2, maximo = pcall(function() return humanoid.MaxHealth end)
+				if ok and ok2 and type(atual) == "number" and type(maximo) == "number" and maximo > 0 then
+					return atual, maximo
+				end
+			end
+			return nil, nil
+		end
+
+		local ok1, atual = pcall(fonte.obterAtual)
+		if not ok1 or type(atual) ~= "number" then
+			-- fonte parou de funcionar (ex: Value destruido); tenta redetectar (max 2x, sem recursao)
+			VidaCache[personagem] = nil
+			if tentativa == 2 then return nil, nil end
+		else
+			local ok2, maximo = pcall(fonte.obterMax)
+			if not ok2 or type(maximo) ~= "number" or maximo <= 0 then
+				-- sem maximo confiavel: guarda o maior valor ja visto dentro da propria fonte (cacheada por personagem)
+				maximo = math.max(fonte.maxVisto or atual, atual)
+				fonte.maxVisto = maximo
+			end
+			if maximo <= 0 then maximo = math.max(atual, 1) end
+			return atual, maximo
+		end
+	end
+
+	return nil, nil
+end
+
+local function atualizarESP(jogador)
+	local esp = ESP_Objects[jogador]
+	if not esp then return end
+
+	local personagem = jogador.Character
+	if not personagem then
+		destruirESP(jogador)
+		return
+	end
+
+	if not estaVivo(jogador) then
+		pcall(function() if esp.Container and esp.Container.Parent then esp.Container.Enabled = false end end)
+		destruirLinhaESP(jogador)
+		return
+	end
+
+	local humanoid = personagem:FindFirstChildOfClass("Humanoid")
+	local hrp = personagem:FindFirstChild("HumanoidRootPart")
+	local head = personagem:FindFirstChild("Head")
+
+	if not hrp or not head then
+		pcall(function() if esp.Container and esp.Container.Parent then esp.Container.Enabled = false end end)
+		destruirLinhaESP(jogador)
+		return
+	end
+
+	local eMesmoTime = Config.TEAMCHECK and jogador.Team == LocalPlayer.Team
+	local cor = eMesmoTime and CorAliado or CorInimigo
+
+	if not Config.ATIVARESP then
+		pcall(function() if esp.Container and esp.Container.Parent then esp.Container.Enabled = false end end)
+		destruirLinhaESP(jogador)
+		return
+	end
+
+	local hrpPos, hrpOnScreen = Camera:WorldToViewportPoint(hrp.Position)
+	if not hrpOnScreen or hrpPos.Z < 0 then
+		pcall(function() if esp.Container and esp.Container.Parent then esp.Container.Enabled = false end end)
+		destruirLinhaESP(jogador)
+		return
+	end
+
+	if Config.TEAMCHECK and eMesmoTime then
+		pcall(function() if esp.Container and esp.Container.Parent then esp.Container.Enabled = false end end)
+		destruirLinhaESP(jogador)
+		return
+	end
+
+	local charLocal = LocalPlayer.Character
+	local hrpLocal = charLocal and getParteAlvo(charLocal, "Raiz")
+	local distancia = 0
+	if hrpLocal and hrp then
+		distancia = (hrpLocal.Position - hrp.Position).Magnitude
+	end
+
+	pcall(function()
+		if esp.Container and esp.Container.Parent then
+			esp.Container.Enabled = true
+			esp.Container.Adornee = hrp
+		end
+	end)
+
+	pcall(function() if esp.BoxStroke then esp.BoxStroke.Color = cor end end)
+
+	pcall(function()
+		if Config.ESPCAIXA then
+			esp.Box.Visible = true
+			esp.BoxStroke.Enabled = true
+		else
+			esp.Box.Visible = false
+			esp.BoxStroke.Enabled = false
+		end
+	end)
+
+	pcall(function()
+		if Config.ESPNOME then
+			esp.Nome.Visible = true
+			esp.Nome.Text = jogador.DisplayName
+			esp.Nome.TextColor3 = cor
+		else
+			esp.Nome.Visible = false
+		end
+	end)
+
+	pcall(function()
+		if Config.ESPTIME then
+			esp.Time.Visible = true
+			local nomeTime = "Sem Time"
+			if jogador.Team then
+				nomeTime = jogador.Team.Name
+			end
+			esp.Time.Text = "[" .. nomeTime .. "]"
+			esp.Time.TextColor3 = cor
+		else
+			esp.Time.Visible = false
+		end
+	end)
+
+	pcall(function()
+		if Config.ESPDISTANCIA then
+			esp.Distancia.Visible = true
+			esp.Distancia.Text = math.floor(distancia) .. "m"
+		else
+			esp.Distancia.Visible = false
+		end
+	end)
+
+	pcall(function()
+		if Config.ESPVIDA then
+			local vidaAtual, vidaMax = obterVida(jogador, personagem, humanoid)
+			if vidaAtual and vidaMax then
+				local healthPercent = math.clamp(vidaAtual / vidaMax, 0, 1)
+				esp.Vida.Visible = true
+				esp.VidaFill.Size = UDim2.new(1, 0, healthPercent, 0)
+				esp.VidaFill.Position = UDim2.new(0, 0, 1 - healthPercent, 0)
+				esp.VidaFill.BackgroundColor3 = Color3.fromRGB(255 * (1 - healthPercent), 255 * healthPercent, 0)
+			else
+				esp.Vida.Visible = false
+			end
+		else
+			esp.Vida.Visible = false
+		end
+	end)
+
+	local posicaoBox = getPosicaoTopoESPBox(personagem)
+	if posicaoBox then
+		atualizarLinhaESP(jogador, cor, posicaoBox)
+	else
+		destruirLinhaESP(jogador)
+	end
+
+	atualizarSkeleton(jogador, cor)
+	atualizarChams(jogador, cor)
+end
+
+local function atualizarESPNPC(npc)
+	local esp = ESP_NPCs[npc]
+	if not esp then return end
+
+	if not npc or not npc.Parent then
+		destruirESPNPC(npc)
+		return
+	end
+
+	if not estaVivoNPC(npc) then
+		pcall(function() if esp.Container and esp.Container.Parent then esp.Container.Enabled = false end end)
+		return
+	end
+
+	local humanoid = npc:FindFirstChildOfClass("Humanoid")
+	local hrp = npc:FindFirstChild("HumanoidRootPart")
+	local head = npc:FindFirstChild("Head")
+
+	if not hrp or not head then
+		pcall(function() if esp.Container and esp.Container.Parent then esp.Container.Enabled = false end end)
+		return
+	end
+
+	if not Config.ATIVARESP or not Config.NPC_ESP then
+		pcall(function() if esp.Container and esp.Container.Parent then esp.Container.Enabled = false end end)
+		return
+	end
+
+	local hrpPos, hrpOnScreen = Camera:WorldToViewportPoint(hrp.Position)
+	if not hrpOnScreen or hrpPos.Z < 0 then
+		pcall(function() if esp.Container and esp.Container.Parent then esp.Container.Enabled = false end end)
+		return
+	end
+
+	local charLocal = LocalPlayer.Character
+	local hrpLocal = charLocal and getParteAlvo(charLocal, "Raiz")
+	local distancia = 0
+	if hrpLocal and hrp then
+		distancia = (hrpLocal.Position - hrp.Position).Magnitude
+	end
+
+	pcall(function()
+		if esp.Container and esp.Container.Parent then
+			esp.Container.Enabled = true
+			esp.Container.Adornee = hrp
+		end
+	end)
+
+	pcall(function() if esp.BoxStroke then esp.BoxStroke.Color = CorNPC end end)
+
+	pcall(function()
+		if Config.ESPCAIXA then
+			esp.Box.Visible = true
+			esp.BoxStroke.Enabled = true
+		else
+			esp.Box.Visible = false
+			esp.BoxStroke.Enabled = false
+		end
+	end)
+
+	pcall(function()
+		if Config.ESPNOME then
+			esp.Nome.Visible = true
+			esp.Nome.Text = "[NPC] " .. npc.Name
+			esp.Nome.TextColor3 = CorNPC
+		else
+			esp.Nome.Visible = false
+		end
+	end)
+
+	pcall(function()
+		if Config.ESPDISTANCIA then
+			esp.Distancia.Visible = true
+			esp.Distancia.Text = math.floor(distancia) .. "m"
+		else
+			esp.Distancia.Visible = false
+		end
+	end)
+
+	pcall(function()
+		if Config.ESPVIDA then
+			local vidaAtual, vidaMax = obterVida(nil, npc, humanoid)
+			if vidaAtual and vidaMax then
+				local healthPercent = math.clamp(vidaAtual / vidaMax, 0, 1)
+				esp.Vida.Visible = true
+				esp.VidaFill.Size = UDim2.new(1, 0, healthPercent, 0)
+				esp.VidaFill.Position = UDim2.new(0, 0, 1 - healthPercent, 0)
+				esp.VidaFill.BackgroundColor3 = Color3.fromRGB(255 * (1 - healthPercent), 255 * healthPercent, 0)
+			else
+				esp.Vida.Visible = false
+			end
+		else
+			esp.Vida.Visible = false
+		end
+	end)
+
+	atualizarSkeletonNPC(npc)
+	atualizarChamsNPC(npc)
+end
+
+local function mesmoTime(jogador)
+	if LocalPlayer.Team and jogador.Team then
+		return LocalPlayer.Team == jogador.Team
+	end
+	return false
+end
+
+-- ============================================
+-- WALLCHECK (Raycast)
+-- ============================================
+local RaycastParamsCache = nil
+local VisibilidadeJogadores = {}
+local VisibilidadeNPCs = {}
+local VisibilidadeLoopAtivo = false
+
+local function getRaycastParams()
+	if RaycastParamsCache then return RaycastParamsCache end
+	local sucesso, params = pcall(function()
+		local p = RaycastParams.new()
+		p.FilterType = Enum.RaycastFilterType.Exclude
+		return p
+	end)
+	if sucesso then
+		RaycastParamsCache = params
+	end
+	return params
+end
+
+local function atualizarVisibilidade()
+	if VisibilidadeLoopAtivo then return end
+	VisibilidadeLoopAtivo = true
+
+	task.spawn(function()
+		while VisibilidadeLoopAtivo do
+			task.wait(0.15)
+			pcall(function()
+				local params = getRaycastParams()
+				if not params then
+					for _, jogador in pairs(Players:GetPlayers()) do
+						VisibilidadeJogadores[jogador] = true
+					end
+					for npc, _ in pairs(VisibilidadeNPCs) do
+						VisibilidadeNPCs[npc] = true
+					end
+					return
+				end
+				local posicao = Camera.CFrame.Position
+				local filtro = {Camera}
+				for _, jogador in pairs(Players:GetPlayers()) do
+					if jogador.Character then
+						table.insert(filtro, jogador.Character)
+					end
+				end
+				for _, npc in pairs(getNPCs()) do
+					table.insert(filtro, npc)
+				end
+				pcall(function() params.FilterDescendantsInstances = filtro end)
+
+				for _, jogador in pairs(Players:GetPlayers()) do
+					if jogador == LocalPlayer then
+						VisibilidadeJogadores[jogador] = true
+					else
+						local personagem = jogador.Character
+						if not personagem then
+							VisibilidadeJogadores[jogador] = false
+						elseif not estaVivo(jogador) then
+							VisibilidadeJogadores[jogador] = false
+						else
+							local cabeca = getParteAlvo(personagem, "Cabeca")
+							if not cabeca then
+								VisibilidadeJogadores[jogador] = false
+							else
+								local sucesso, resultado = pcall(function()
+									local direcao = cabeca.Position - posicao
+									local distancia = direcao.Magnitude
+									if distancia < 0.5 then return nil end
+									return Workspace:Raycast(posicao, direcao.Unit * distancia, params)
+								end)
+								VisibilidadeJogadores[jogador] = sucesso and resultado == nil
+							end
+						end
+					end
+				end
+
+				local npcsAtuais = {}
+				for _, npc in pairs(getNPCs()) do
+					npcsAtuais[npc] = true
+					if not estaVivoNPC(npc) then
+						VisibilidadeNPCs[npc] = false
+					else
+						local cabeca = getParteAlvo(npc, "Cabeca")
+						if not cabeca then
+							VisibilidadeNPCs[npc] = false
+						else
+							local sucesso, resultado = pcall(function()
+								local direcao = cabeca.Position - posicao
+								local distancia = direcao.Magnitude
+								if distancia < 0.5 then return nil end
+								return Workspace:Raycast(posicao, direcao.Unit * distancia, params)
+							end)
+							VisibilidadeNPCs[npc] = sucesso and resultado == nil
+						end
+					end
+				end
+
+				for npc, _ in pairs(VisibilidadeNPCs) do
+					if not npcsAtuais[npc] then
+						VisibilidadeNPCs[npc] = nil
+					end
+				end
+			end)
+		end
+	end)
+end
+
+atualizarVisibilidade()
+
+local function visivel(jogador)
+	return VisibilidadeJogadores[jogador] == true
+end
+
+local function visivelNPC(npc)
+	return VisibilidadeNPCs[npc] == true
+end
+
+print("Parte 1 carregada - Configuracoes e ESP")
+
+-- ============================================
+-- HITBOX SYSTEM V4.5 - HIBRIDA
+-- ============================================
+local HitboxDados = {}
+local HitboxFakeParts = {}
+
+local function getHitboxTargetPart(personagem)
+	if not personagem then return nil end
+	local parteNome = Config.HITBOX_PARTE or "Cabeça"
+	if parteNome == "Cabeça" then
+		return personagem:FindFirstChild("Head")
+	elseif parteNome == "Tronco" then
+		return personagem:FindFirstChild("UpperTorso") or personagem:FindFirstChild("Torso")
+	end
+	return personagem:FindFirstChild("Head")
+end
+
+local function salvarDadosOriginais(alvo, chave)
+	if not alvo or not alvo.Parent then return nil end
+	if HitboxDados[chave] then return HitboxDados[chave] end
+	local specialMesh = alvo:FindFirstChildOfClass("SpecialMesh")
+	local meshScaleOriginal = nil
+	if specialMesh then meshScaleOriginal = specialMesh.Scale end
+	local dados = {
+		tamanhoOriginal = alvo.Size,
+		transparenciaOriginal = alvo.Transparency,
+		materialOriginal = alvo.Material,
+		corOriginal = alvo.Color,
+		shapeOriginal = alvo:IsA("Part") and alvo.Shape or nil,
+		meshScaleOriginal = meshScaleOriginal,
+		parte = alvo,
+	}
+	HitboxDados[chave] = dados
+	return dados
+end
+
+local function aplicarHitboxReal(alvo, chave)
+	if not alvo or not alvo.Parent then return end
+	local dados = salvarDadosOriginais(alvo, chave)
+	if not dados then return end
+	local tamanho = Config.HITBOX_TAMANHO
+	pcall(function()
+		alvo.Size = Vector3.new(tamanho, tamanho, tamanho)
+		local specialMesh = alvo:FindFirstChildOfClass("SpecialMesh")
+		if specialMesh and dados.meshScaleOriginal then
+			local proporcao = tamanho / dados.tamanhoOriginal.X
+			specialMesh.Scale = dados.meshScaleOriginal * proporcao
+		end
+		if Config.HITBOX_PARTE == "Cabeça" and alvo:IsA("Part") and not specialMesh then
+			alvo.Shape = Enum.PartType.Block
+		end
+		alvo.Transparency = Config.HITBOX_TRANSPARENCIA
+		alvo.Color = CorHitbox
+		alvo.Material = Enum.Material.Neon
+		alvo.Massless = true
+		alvo.CanCollide = false
+		alvo.CanQuery = true
+		alvo.CanTouch = true
+	end)
+end
+
+local function restaurarHitboxReal(chave)
+	local dados = HitboxDados[chave]
+	if not dados then return end
+	local alvo = dados.parte
+	if not alvo or not alvo.Parent then
+		HitboxDados[chave] = nil
+		return
+	end
+	pcall(function()
+		alvo.Size = dados.tamanhoOriginal
+		alvo.Transparency = dados.transparenciaOriginal
+		alvo.Material = dados.materialOriginal
+		alvo.Color = dados.corOriginal
+		alvo.Massless = false
+		if dados.shapeOriginal and alvo:IsA("Part") then
+			alvo.Shape = dados.shapeOriginal
+		end
+		local specialMesh = alvo:FindFirstChildOfClass("SpecialMesh")
+		if specialMesh and dados.meshScaleOriginal then
+			specialMesh.Scale = dados.meshScaleOriginal
+		end
+	end)
+	HitboxDados[chave] = nil
+end
+
+local function destruirHitboxFake(chave)
+	local fake = HitboxFakeParts[chave]
+	if fake and fake.Parent then
+		pcall(function() fake:Destroy() end)
+	end
+	HitboxFakeParts[chave] = nil
+end
+
+local function criarHitboxFake(alvo, chave)
+	if not alvo or not alvo.Parent then return nil end
+	if HitboxFakeParts[chave] and HitboxFakeParts[chave].Parent then
+		return HitboxFakeParts[chave]
+	end
+	destruirHitboxFake(chave)
+	local fake = Instance.new("Part")
+	fake.Name = "HB_" .. tostring(math.random(1000, 9999))
+	fake.Shape = Enum.PartType.Block
+	fake.Size = Vector3.new(Config.HITBOX_TAMANHO, Config.HITBOX_TAMANHO, Config.HITBOX_TAMANHO)
+	fake.Transparency = 1
+	fake.Color = CorHitbox
+	fake.Material = Enum.Material.Neon
+	fake.CanCollide = false
+	fake.CanQuery = true
+	fake.CanTouch = true
+	fake.Anchored = false
+	fake.CastShadow = false
+	fake.Massless = true
+	fake.Parent = alvo.Parent
+	local weld = Instance.new("Weld")
+	weld.Part0 = alvo
+	weld.Part1 = fake
+	weld.C0 = CFrame.new(0, 0, 0)
+	weld.Parent = fake
+	HitboxFakeParts[chave] = fake
+	return fake
+end
+
+local function limparTodasHitboxes()
+	for chave, _ in pairs(HitboxDados) do
+		restaurarHitboxReal(chave)
+	end
+	for chave, _ in pairs(HitboxFakeParts) do
+		destruirHitboxFake(chave)
+	end
+end
+
+local function atualizarHitboxJogadores()
+	for _, jogador in pairs(Players:GetPlayers()) do
+		if jogador == LocalPlayer then continue end
+		if not estaVivo(jogador) then
+			local chave = "player_" .. jogador.UserId
+			restaurarHitboxReal(chave)
+			destruirHitboxFake(chave)
+			continue
+		end
+		local chave = "player_" .. jogador.UserId
+		if not Config.HITBOX_ATIVAR then
+			restaurarHitboxReal(chave)
+			destruirHitboxFake(chave)
+			continue
+		end
+		if Config.TEAMCHECK and mesmoTime(jogador) then
+			restaurarHitboxReal(chave)
+			destruirHitboxFake(chave)
+			continue
+		end
+		local personagem = jogador.Character
+		if not personagem then
+			restaurarHitboxReal(chave)
+			destruirHitboxFake(chave)
+			continue
+		end
+		local alvo = getHitboxTargetPart(personagem)
+		if not alvo then
+			restaurarHitboxReal(chave)
+			destruirHitboxFake(chave)
+			continue
+		end
+		aplicarHitboxReal(alvo, chave)
+		local fake = criarHitboxFake(alvo, chave .. "_fake")
+		if fake then
+			fake.Size = Vector3.new(Config.HITBOX_TAMANHO, Config.HITBOX_TAMANHO, Config.HITBOX_TAMANHO)
+		end
+	end
+end
+
+local function atualizarHitboxNPCs()
+	if not Config.HITBOX_NPC then
+		for chave, _ in pairs(HitboxDados) do
+			if string.sub(chave, 1, 4) == "npc_" then
+				restaurarHitboxReal(chave)
+			end
+		end
+		for chave, _ in pairs(HitboxFakeParts) do
+			if string.sub(chave, 1, 4) == "npc_" then
+				destruirHitboxFake(chave)
+			end
+		end
+		return
+	end
+	if not Config.HITBOX_ATIVAR then return end
+	local npcs = getNPCs()
+	local npcsAtivos = {}
+	for _, npc in pairs(npcs) do
+		if not npc or not npc.Parent then continue end
+		if not estaVivoNPC(npc) then continue end
+		local chave = "npc_" .. npc.Name .. "_" .. tostring(npc)
+		npcsAtivos[chave] = true
+		local alvo = getHitboxTargetPart(npc)
+		if not alvo then
+			restaurarHitboxReal(chave)
+			destruirHitboxFake(chave .. "_fake")
+			continue
+		end
+		aplicarHitboxReal(alvo, chave)
+		local fake = criarHitboxFake(alvo, chave .. "_fake")
+		if fake then
+			fake.Size = Vector3.new(Config.HITBOX_TAMANHO, Config.HITBOX_TAMANHO, Config.HITBOX_TAMANHO)
+		end
+	end
+	for chave, _ in pairs(HitboxDados) do
+		if string.sub(chave, 1, 4) == "npc_" and not npcsAtivos[chave] then
+			restaurarHitboxReal(chave)
+		end
+	end
+	for chave, _ in pairs(HitboxFakeParts) do
+		if string.sub(chave, 1, 4) == "npc_" and not npcsAtivos[string.sub(chave, 1, -6)] then
+			destruirHitboxFake(chave)
+		end
+	end
+end
+
+local function atualizarHitboxLoop()
+	atualizarHitboxJogadores()
+	atualizarHitboxNPCs()
+end
+
+print("Parte 1.5 carregada - HitBox System V4.5")
+
+-- ============================================
+-- FUNCOES DE CONTROLE
+-- ============================================
+local SpinConnection = nil
+local SpinAngulo = 0
+
+local function ativarSpin()
+	if SpinConnection then return end
+	SpinConnection = RunService.RenderStepped:Connect(function(dt)
+		pcall(function()
+			local char = LocalPlayer.Character
+			if not char then return end
+			local hrp = getParteAlvo(char, "Raiz")
+			if not hrp then return end
+			SpinAngulo = (SpinAngulo + 1000 * dt) % 360
+			hrp.CFrame = CFrame.new(hrp.Position) * CFrame.Angles(0, math.rad(SpinAngulo), 0)
+		end)
+	end)
+end
+
+local function desativarSpin()
+	if SpinConnection then
+		SpinConnection:Disconnect()
+		SpinConnection = nil
+	end
+	SpinAngulo = 0
+end
+
+local ConexoesVoar = {}
+local DadosVoar = {}
+
+local function limparVoar()
+	for _, con in pairs(ConexoesVoar) do
+		pcall(function() con:Disconnect() end)
+	end
+	ConexoesVoar = {}
+end
+
+local function aplicarVoarPersonagem(jogador, personagem)
+	if not Config.VOAR_INIMIGO then return end
+	if jogador == LocalPlayer then return end
+	if Config.TEAMCHECK and mesmoTime(jogador) then return end
+	if not estaVivo(jogador) then return end
+	local hrp = getParteAlvo(personagem, "Raiz")
+	if not hrp then return end
+	local humanoid = personagem:FindFirstChildOfClass("Humanoid")
+	if not humanoid then return end
+	task.spawn(function()
+		task.wait(0.3)
+		if not Config.VOAR_INIMIGO then return end
+		if not personagem or not personagem.Parent then return end
+		if not estaVivo(jogador) then return end
+		local hrpAtual = getParteAlvo(personagem, "Raiz")
+		if not hrpAtual then return end
+		local altura = VoarAltura * 5
+		local posY = hrpAtual.Position.Y
+		DadosVoar[jogador] = {altura = altura, posYBase = posY, ativo = true}
+		pcall(function()
+			local cf = hrpAtual.CFrame
+			hrpAtual.CFrame = CFrame.new(cf.Position.X, posY + altura, cf.Position.Z) * CFrame.Angles(cf:ToEulerAnglesXYZ())
+		end)
+		local con = RunService.Heartbeat:Connect(function()
+			if not Config.VOAR_INIMIGO then return end
+			if not personagem or not personagem.Parent then return end
+			if not DadosVoar[jogador] or not DadosVoar[jogador].ativo then return end
+			if not estaVivo(jogador) then return end
+			pcall(function()
+				local hrpLoop = getParteAlvo(personagem, "Raiz")
+				if not hrpLoop then return end
+				local cf = hrpLoop.CFrame
+				local dados = DadosVoar[jogador]
+				if dados and math.abs(cf.Position.Y - dados.posYBase) < (dados.altura + 2) then
+					hrpLoop.CFrame = CFrame.new(cf.Position.X, dados.posYBase + dados.altura, cf.Position.Z) * CFrame.Angles(cf:ToEulerAnglesXYZ())
+				end
+			end)
+		end)
+		table.insert(ConexoesVoar, con)
+	end)
+end
+
+local function ativarVoarInimigo()
+	limparVoar()
+	if not Config.VOAR_INIMIGO then return end
+	for jogador, dados in pairs(DadosVoar) do
+		dados.ativo = false
+	end
+	for _, jogador in pairs(Players:GetPlayers()) do
+		if jogador == LocalPlayer then continue end
+		if Config.TEAMCHECK and mesmoTime(jogador) then continue end
+		if not estaVivo(jogador) then continue end
+		local personagem = jogador.Character
+		if not personagem then continue end
+		aplicarVoarPersonagem(jogador, personagem)
+	end
+end
+
+-- ============================================
+-- TP STALKER (se prende atras do player mais proximo)
+-- ============================================
+local function getJogadorMaisProximo()
+	local char = LocalPlayer.Character
+	local meuHrp = char and getParteAlvo(char, "Raiz")
+	if not meuHrp then return nil end
+	local melhor, menorDist = nil, math.huge
+	for _, jogador in pairs(Players:GetPlayers()) do
+		if jogador == LocalPlayer then continue end
+		if Config.TEAMCHECK and mesmoTime(jogador) then continue end
+		if not estaVivo(jogador) then continue end
+		local hrp = jogador.Character and getParteAlvo(jogador.Character, "Raiz")
+		if not hrp then continue end
+		local d = (hrp.Position - meuHrp.Position).Magnitude
+		if d < menorDist then
+			menorDist = d
+			melhor = hrp
+		end
+	end
+	return melhor
+end
+
+RunService.Heartbeat:Connect(function()
+	if PanicAtivado or not Config.TP_STALKER then return end
+	pcall(function()
+		local char = LocalPlayer.Character
+		local meuHrp = char and getParteAlvo(char, "Raiz")
+		if not meuHrp then return end
+		local alvoHrp = getJogadorMaisProximo()
+		if not alvoHrp then return end
+		-- +Z local = atras do alvo
+		meuHrp.CFrame = alvoHrp.CFrame * CFrame.new(0, 0, Config.TP_DISTANCIA)
+		meuHrp.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+	end)
+end)
+
+print("Parte 1.6 carregada - Funcoes de controle")
+
+-- ============================================
+-- INTERFACE GUI
+-- ============================================
+local IsMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+local IsConsole = UserInputService.GamepadEnabled and not UserInputService.KeyboardEnabled
+local IsTouchDevice = UserInputService.TouchEnabled
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 460, 0, 340)
+MainFrame.Position = UDim2.new(0.5, -230, 0.5, -170)
+MainFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 14)
+MainFrame.BorderSizePixel = 0
+MainFrame.Visible = true
+MainFrame.Active = true
+MainFrame.Parent = ScreenGui
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
+
+local Stroke = Instance.new("UIStroke", MainFrame)
+Stroke.Color = CorPainel
+Stroke.Thickness = 1.5
+
+local ScrollFrame = Instance.new("ScrollingFrame")
+ScrollFrame.Name = "ScrollFrame"
+ScrollFrame.Size = UDim2.new(1, 0, 1, -66)
+ScrollFrame.Position = UDim2.new(0, 0, 0, 66)
+ScrollFrame.BackgroundTransparency = 1
+ScrollFrame.BorderSizePixel = 0
+ScrollFrame.ScrollBarThickness = 4
+ScrollFrame.ScrollBarImageColor3 = CorPainel
+ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 500)
+ScrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ScrollFrame.ScrollingEnabled = true
+ScrollFrame.ScrollingDirection = Enum.ScrollingDirection.Y
+ScrollFrame.Parent = MainFrame
+
+local MiniBar = Instance.new("ScreenGui")
+MiniBar.Name = "HesizMiniBar"
+MiniBar.ResetOnSpawn = false
+MiniBar.ZIndexBehavior = Enum.ZIndexBehavior.Global
+MiniBar.IgnoreGuiInset = true
+MiniBar.DisplayOrder = 999
+pcall(function() MiniBar.Parent = HiddenParent end)
+if not MiniBar.Parent then MiniBar.Parent = LocalPlayer:WaitForChild("PlayerGui") end
+
+local MiniFrame = Instance.new("Frame", MiniBar)
+MiniFrame.Name = "MiniFrame"
+MiniFrame.Size = UDim2.new(0, 185, 0, 28)
+MiniFrame.Position = UDim2.new(0.5, -92, 0, 8)
+MiniFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 14)
+MiniFrame.BorderSizePixel = 0
+MiniFrame.Active = true
+MiniFrame.Draggable = true
+MiniFrame.Visible = false
+Instance.new("UICorner", MiniFrame).CornerRadius = UDim.new(0, 8)
+
+local MiniStroke = Instance.new("UIStroke", MiniFrame)
+MiniStroke.Color = CorPainel
+MiniStroke.Thickness = 1.5
+
+local MiniTitulo = Instance.new("TextLabel", MiniFrame)
+MiniTitulo.Name = "Titulo"
+MiniTitulo.Size = UDim2.new(1, -34, 1, 0)
+MiniTitulo.Position = UDim2.new(0, 8, 0, 0)
+MiniTitulo.BackgroundTransparency = 1
+MiniTitulo.Text = "SPECTRA PANEL"
+MiniTitulo.TextColor3 = Color3.new(1, 1, 1)
+MiniTitulo.Font = Enum.Font.SourceSansBold
+MiniTitulo.TextSize = 13
+MiniTitulo.TextXAlignment = Enum.TextXAlignment.Left
+
+local MiniBtn = Instance.new("TextButton", MiniFrame)
+MiniBtn.Name = "Expandir"
+MiniBtn.Size = UDim2.new(0, 28, 1, -4)
+MiniBtn.Position = UDim2.new(1, -30, 0, 2)
+MiniBtn.Text = "^"
+MiniBtn.Font = Enum.Font.SourceSansBold
+MiniBtn.TextSize = 15
+MiniBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+MiniBtn.TextColor3 = Color3.new(1, 1, 1)
+MiniBtn.BorderSizePixel = 0
+MiniBtn.AutoButtonColor = false
+Instance.new("UICorner", MiniBtn).CornerRadius = UDim.new(0, 6)
+
+MiniBtn.MouseButton1Click:Connect(function()
+	MiniFrame.Visible = false
+	MainFrame.Visible = true
+end)
+
+if IsMobile or IsConsole then
+	local CloseBtn = Instance.new("TextButton", MainFrame)
+	CloseBtn.Name = "CloseBtn"
+	CloseBtn.Size = UDim2.new(0, 32, 0, 32)
+	CloseBtn.Position = UDim2.new(1, -36, 0, 2)
+	CloseBtn.Text = "X"
+	CloseBtn.Font = Enum.Font.SourceSansBold
+	CloseBtn.TextSize = 16
+	CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+	CloseBtn.TextColor3 = Color3.new(1, 1, 1)
+	CloseBtn.BorderSizePixel = 0
+	CloseBtn.AutoButtonColor = false
+	CloseBtn.ZIndex = 5
+	Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 8)
+	CloseBtn.MouseButton1Click:Connect(function()
+		MainFrame.Visible = false
+		MiniFrame.Visible = true
+	end)
+end
+
+local Header = Instance.new("Frame", MainFrame)
+Header.Name = "Header"
+Header.Size = UDim2.new(1, 0, 0, 34)
+Header.BackgroundColor3 = CorPainel
+Header.BorderSizePixel = 0
+Instance.new("UICorner", Header).CornerRadius = UDim.new(0, 12)
+
+local Titulo = Instance.new("TextLabel", Header)
+Titulo.Name = "Titulo"
+Titulo.Size = UDim2.new(1, -70, 1, 0)
+Titulo.Position = UDim2.new(0, 10, 0, 0)
+Titulo.BackgroundTransparency = 1
+Titulo.Text = "SPECTRA PANEL"
+Titulo.TextColor3 = Color3.new(1, 1, 1)
+Titulo.TextSize = 18
+Titulo.Font = Enum.Font.SourceSansBold
+Titulo.Active = true
+
+local tempo = 0
+local contador = 0
+RunService.Heartbeat:Connect(function(dt)
+	contador = contador + 1
+	if contador % 3 ~= 0 then return end
+	tempo = tempo + dt * 2
+	if Titulo and Titulo.Parent then
+		Titulo.Position = UDim2.new(0, 10, 0, math.sin(tempo) * 3)
+	end
+end)
+
+if not IsMobile and not IsConsole then
+	local MinimizarBtn = Instance.new("TextButton", Header)
+	MinimizarBtn.Name = "Minimizar"
+	MinimizarBtn.Text = "v"
+	MinimizarBtn.Size = UDim2.new(0, 28, 1, -4)
+	MinimizarBtn.Position = UDim2.new(1, -30, 0, 2)
+	MinimizarBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	MinimizarBtn.TextColor3 = Color3.new(1, 1, 1)
+	MinimizarBtn.Font = Enum.Font.SourceSansBold
+	MinimizarBtn.TextSize = 16
+	MinimizarBtn.AutoButtonColor = false
+	MinimizarBtn.BorderSizePixel = 0
+	Instance.new("UICorner", MinimizarBtn).CornerRadius = UDim.new(0, 6)
+	MinimizarBtn.MouseButton1Click:Connect(function()
+		MainFrame.Visible = false
+		MiniFrame.Visible = true
+	end)
+end
+
+-- Dragging
+if IsTouchDevice then
+	local dragging = false
+	local dragStart = nil
+	local startPos = nil
+	Titulo.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			dragStart = input.Position
+			startPos = MainFrame.Position
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+			local delta = input.Position - dragStart
+			MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		end
+	end)
+	UserInputService.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = false
+		end
+	end)
+else
+	local dragging = false
+	local dragStart = nil
+	local startPos = nil
+	Titulo.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			dragStart = input.Position
+			startPos = MainFrame.Position
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+			local delta = input.Position - dragStart
+			MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		end
+	end)
+	UserInputService.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = false
+		end
+	end)
+end
+
+local Sep1 = Instance.new("Frame", MainFrame)
+Sep1.Name = "Sep1"
+Sep1.Size = UDim2.new(1, -20, 0, 1)
+Sep1.Position = UDim2.new(0, 10, 0, 36)
+Sep1.BackgroundColor3 = CorPainel
+Sep1.BorderSizePixel = 0
+
+local Abas = {"AIMBOT", "VISUAL", "HITBOX", "MISC", "TP", "OUTROS"}
+local AbaAtual = "VISUAL"
+local FramesAbas = {}
+local BotoesAbas = {}
+
+local Sep2 = Instance.new("Frame", MainFrame)
+Sep2.Name = "Sep2"
+Sep2.Size = UDim2.new(1, 0, 0, 1)
+Sep2.Position = UDim2.new(0, 0, 0, 64)
+Sep2.BackgroundColor3 = CorPainel
+Sep2.BorderSizePixel = 0
+
+local function criarFrameAba(nome)
+	local frame = Instance.new("Frame")
+	frame.Name = nome .. "Frame"
+	frame.Position = UDim2.new(0, 0, 0, 0)
+	frame.Size = UDim2.new(1, 0, 0, 460)
+	frame.BackgroundTransparency = 1
+	frame.Visible = AbaAtual == nome
+	frame.ClipsDescendants = true
+	frame.Parent = ScrollFrame
+	FramesAbas[nome] = frame
+	return frame
+end
+
+local FrameVisual = criarFrameAba("VISUAL")
+local FrameAimbot = criarFrameAba("AIMBOT")
+local FrameHitbox = criarFrameAba("HITBOX")
+local FrameMisc = criarFrameAba("MISC")
+local FrameTP = criarFrameAba("TP")
+local FrameOutros = criarFrameAba("OUTROS")
+
+local BotoesToggle = {}
+local BarrasSlider = {}
+
+local function atualizarCores()
+	if Header and Header.Parent then Header.BackgroundColor3 = CorPainel end
+	if Sep1 and Sep1.Parent then Sep1.BackgroundColor3 = CorPainel end
+	if Sep2 and Sep2.Parent then Sep2.BackgroundColor3 = CorPainel end
+	pcall(function() Stroke.Color = CorPainel end)
+	pcall(function() MiniStroke.Color = CorPainel end)
+	pcall(function() ScrollFrame.ScrollBarImageColor3 = CorPainel end)
+
+	for _, btn in pairs(BotoesAbas) do
+		if btn and btn.Parent then
+			local nomeAba = btn.Name:gsub("Tab", "")
+			btn.BackgroundColor3 = (nomeAba == AbaAtual) and CorPainel or Color3.fromRGB(18, 18, 30)
+		end
+	end
+
+	for nome, btn in pairs(BotoesToggle) do
+		if btn and btn.Parent then
+			btn.BackgroundColor3 = Config[nome] and CorPainel or Color3.fromRGB(20, 20, 40)
+		end
+	end
+
+	for _, barra in pairs(BarrasSlider) do
+		if barra and barra.Parent then
+			barra.BackgroundColor3 = CorPainel
+		end
+	end
+end
+
+local numAbas = #Abas
+-- Largura dividida igualmente para caber todas as abas no painel
+local larguraPainel = 460
+local larguraAba = larguraPainel / numAbas
+local inicioX = 0
+
+for i, nome in ipairs(Abas) do
+	local btn = Instance.new("TextButton", MainFrame)
+	btn.Name = nome .. "Tab"
+	btn.Size = UDim2.new(0, larguraAba, 0, 24)
+	btn.Position = UDim2.new(0, inicioX + (i - 1) * larguraAba, 0, 40)
+	btn.Text = nome
+	btn.BackgroundColor3 = (AbaAtual == nome) and CorPainel or Color3.fromRGB(18, 18, 30)
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.Font = Enum.Font.SourceSansBold
+	btn.TextSize = 11
+	btn.BorderSizePixel = 0
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 7)
+	table.insert(BotoesAbas, btn)
+	btn.MouseButton1Click:Connect(function()
+		AbaAtual = nome
+		for _, f in pairs(FramesAbas) do f.Visible = false end
+		if FramesAbas[nome] then FramesAbas[nome].Visible = true end
+		atualizarCores()
+	end)
+end
+
+local function criarSeparador(frame, y)
+	local sep = Instance.new("Frame", frame)
+	sep.Name = "Sep"
+	sep.Size = UDim2.new(1, -20, 0, 1)
+	sep.Position = UDim2.new(0, 10, 0, y)
+	sep.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
+	sep.BorderSizePixel = 0
+end
+
+local function criarTituloSecao(frame, texto, y, tamanho)
+	local lbl = Instance.new("TextLabel", frame)
+	lbl.Name = "TituloSecao"
+	lbl.Size = UDim2.new(1, -20, 0, 16)
+	lbl.Position = UDim2.new(0, 10, 0, y)
+	lbl.BackgroundTransparency = 1
+	lbl.Text = texto
+	lbl.TextColor3 = Color3.fromRGB(155, 155, 210)
+	lbl.Font = Enum.Font.SourceSansBold
+	lbl.TextSize = tamanho or 11
+	lbl.TextXAlignment = Enum.TextXAlignment.Left
+	return lbl
+end
+
+print("Parte 2 carregada - Interface GUI")
+
+-- ============================================
+-- TOGGLES, SLIDERS, DROPDOWNS
+-- ============================================
+local function criarToggle(frame, texto, x, y, configKey, callback)
+	local container = Instance.new("Frame", frame)
+	container.Name = configKey .. "Container"
+	container.Position = UDim2.new(0, x, 0, y)
+	container.Size = UDim2.new(0, 200, 0, 28)
+	container.BackgroundTransparency = 1
+
+	local btn = Instance.new("TextButton", container)
+	btn.Name = configKey .. "Btn"
+	btn.Size = UDim2.new(0, 22, 0, 22)
+	btn.Position = UDim2.new(0, 0, 0, 3)
+	btn.BackgroundColor3 = Config[configKey] and CorPainel or Color3.fromRGB(20, 20, 40)
+	btn.BorderSizePixel = 0
+	btn.AutoButtonColor = false
+	btn.Text = Config[configKey] and "✓" or ""
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.Font = Enum.Font.SourceSansBold
+	btn.TextSize = 13
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+
+	local lbl = Instance.new("TextLabel", container)
+	lbl.Name = "Label"
+	lbl.Position = UDim2.new(0, 28, 0, 3)
+	lbl.Size = UDim2.new(1, -28, 0, 22)
+	lbl.BackgroundTransparency = 1
+	lbl.Text = texto
+	lbl.TextColor3 = Color3.fromRGB(225, 225, 225)
+	lbl.Font = Enum.Font.SourceSansBold
+	lbl.TextSize = 13
+	lbl.TextXAlignment = Enum.TextXAlignment.Left
+
+	btn.MouseButton1Click:Connect(function()
+		Config[configKey] = not Config[configKey]
+		btn.BackgroundColor3 = Config[configKey] and CorPainel or Color3.fromRGB(20, 20, 40)
+		btn.Text = Config[configKey] and "✓" or ""
+
+		if callback then
+			local sucesso, erro = pcall(function() callback(Config[configKey]) end)
+			if not sucesso then
+				warn("Erro no callback de " .. configKey .. ": " .. tostring(erro))
+			end
+		end
+
+		if configKey == "SALVAR_CONFIG" then
+			if Config.SALVAR_CONFIG then salvarConfig() else apagarConfig() end
+		end
+		if configKey == "SPEED_BETA" then
+			local char = LocalPlayer.Character
+			if char then
+				local humanoid = char:FindFirstChildOfClass("Humanoid")
+				if humanoid then
+					humanoid.WalkSpeed = Config[configKey] and WalkSpeedMod or WalkSpeedPadrao
+				end
+			end
+		end
+		if configKey == "SPIN" then
+			if Config[configKey] then ativarSpin() else desativarSpin() end
+		end
+		if configKey == "VOAR_INIMIGO" then
+			if Config[configKey] then ativarVoarInimigo() else limparVoar() end
+		end
+		if configKey == "HITBOX_ATIVAR" then
+			if not Config[configKey] then limparTodasHitboxes() end
+		end
+		if configKey == "HITBOX_NPC" then
+			if not Config[configKey] then
+				for chave, _ in pairs(HitboxDados) do
+					if string.sub(chave, 1, 4) == "npc_" then restaurarHitboxReal(chave) end
+				end
+				for chave, _ in pairs(HitboxFakeParts) do
+					if string.sub(chave, 1, 4) == "npc_" then destruirHitboxFake(chave) end
+				end
+			end
+		end
+	end)
+
+	BotoesToggle[configKey] = btn
+	return btn
+end
+
+local function criarSlider(frame, x, y, largura, min, max, valor, texto, callback)
+	local lbl = Instance.new("TextLabel", frame)
+	lbl.Name = texto .. "Label"
+	lbl.Size = UDim2.new(0, largura, 0, 17)
+	lbl.Position = UDim2.new(0, x, 0, y)
+	lbl.BackgroundTransparency = 1
+	lbl.Text = texto .. ": " .. valor
+	lbl.TextColor3 = Color3.fromRGB(200, 200, 255)
+	lbl.Font = Enum.Font.SourceSansBold
+	lbl.TextSize = 13
+	lbl.TextXAlignment = Enum.TextXAlignment.Left
+
+	local barraBg = Instance.new("Frame", frame)
+	barraBg.Name = texto .. "Bg"
+	barraBg.Size = UDim2.new(0, largura, 0, 14)
+	barraBg.Position = UDim2.new(0, x, 0, y + 19)
+	barraBg.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
+	barraBg.BorderSizePixel = 0
+	Instance.new("UICorner", barraBg).CornerRadius = UDim.new(0, 10)
+
+	local ratio = math.clamp((valor - min) / (max - min), 0, 1)
+	local barraFill = Instance.new("Frame", barraBg)
+	barraFill.Name = texto .. "Fill"
+	barraFill.Size = UDim2.new(ratio, 0, 1, 0)
+	barraFill.BackgroundColor3 = CorPainel
+	barraFill.BorderSizePixel = 0
+	Instance.new("UICorner", barraFill).CornerRadius = UDim.new(0, 10)
+	table.insert(BarrasSlider, barraFill)
+
+	local knob = Instance.new("Frame", barraBg)
+	knob.Name = texto .. "Knob"
+	knob.Size = UDim2.new(0, 12, 0, 14)
+	knob.AnchorPoint = Vector2.new(0.5, 0)
+	knob.Position = UDim2.new(ratio, 0, 0, 0)
+	knob.BackgroundColor3 = Color3.new(1, 1, 1)
+	knob.BorderSizePixel = 0
+	Instance.new("UICorner", knob).CornerRadius = UDim.new(0, 6)
+
+	local btn = Instance.new("TextButton", barraBg)
+	btn.Name = texto .. "Btn"
+	btn.Size = UDim2.new(1, 0, 1, 0)
+	btn.BackgroundTransparency = 1
+	btn.Text = ""
+	btn.ZIndex = 3
+
+	local arrastando = false
+	local function atualizar(posX)
+		if not barraBg or not barraBg.Parent then return end
+		local relativo = math.clamp((posX - barraBg.AbsolutePosition.X) / barraBg.AbsoluteSize.X, 0, 1)
+		local novoValor = math.floor(min + (relativo * (max - min)))
+		barraFill.Size = UDim2.new(relativo, 0, 1, 0)
+		knob.Position = UDim2.new(relativo, 0, 0, 0)
+		barraFill.BackgroundColor3 = CorPainel
+		lbl.Text = texto .. ": " .. novoValor
+		if callback then
+			local sucesso, erro = pcall(function() callback(novoValor, relativo) end)
+			if not sucesso then
+				warn("Erro no callback do slider " .. texto .. ": " .. tostring(erro))
+			end
+		end
+	end
+
+	btn.MouseButton1Down:Connect(function()
+		arrastando = true
+		atualizar(UserInputService:GetMouseLocation().X)
+	end)
+
+	UserInputService.InputChanged:Connect(function(input)
+		if not arrastando then return end
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			pcall(function() atualizar(input.Position.X) end)
+		end
+	end)
+
+	UserInputService.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			arrastando = false
+		end
+	end)
+
+	return lbl, barraFill, knob
+end
+
+local DropdownsAbertos = {}
+
+local function criarDropdown(frame, x, y, largura, opcoes, selecionado, callback)
+	local container = Instance.new("Frame", frame)
+	container.Name = "DropdownContainer"
+	container.Position = UDim2.new(0, x, 0, y)
+	container.Size = UDim2.new(0, largura, 0, 26)
+	container.BackgroundColor3 = Color3.fromRGB(22, 22, 38)
+	container.BorderSizePixel = 0
+	Instance.new("UICorner", container).CornerRadius = UDim.new(0, 7)
+
+	local lbl = Instance.new("TextLabel", container)
+	lbl.Name = "Selected"
+	lbl.Size = UDim2.new(1, -30, 1, 0)
+	lbl.Position = UDim2.new(0, 8, 0, 0)
+	lbl.Text = selecionado
+	lbl.TextXAlignment = Enum.TextXAlignment.Left
+	lbl.TextColor3 = Color3.new(1, 1, 1)
+	lbl.Font = Enum.Font.SourceSansBold
+	lbl.TextSize = 13
+	lbl.BackgroundTransparency = 1
+
+	local btn = Instance.new("TextButton", container)
+	btn.Name = "Abrir"
+	btn.Size = UDim2.new(0, 26, 1, 0)
+	btn.Position = UDim2.new(1, -26, 0, 0)
+	btn.Text = "v"
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.Font = Enum.Font.SourceSansBold
+	btn.TextSize = 14
+	btn.BackgroundColor3 = Color3.fromRGB(45, 45, 75)
+	btn.BorderSizePixel = 0
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+
+	local altura = #opcoes * 25
+	local dropdown = Instance.new("Frame")
+	dropdown.Name = "DropdownMenu"
+	dropdown.Size = UDim2.new(0, largura, 0, altura)
+	dropdown.BackgroundColor3 = Color3.fromRGB(16, 16, 28)
+	dropdown.BorderSizePixel = 0
+	dropdown.ZIndex = 50
+	dropdown.Visible = false
+	dropdown.Parent = ScreenGui
+	Instance.new("UICorner", dropdown).CornerRadius = UDim.new(0, 7)
+
+	local dropStroke = Instance.new("UIStroke", dropdown)
+	dropStroke.Color = CorPainel
+	dropStroke.Thickness = 1
+
+	for i, opcao in ipairs(opcoes) do
+		local opBtn = Instance.new("TextButton", dropdown)
+		opBtn.Name = opcao
+		opBtn.Size = UDim2.new(1, 0, 0, 25)
+		opBtn.Position = UDim2.new(0, 0, 0, (i - 1) * 25)
+		opBtn.Text = "  " .. opcao
+		opBtn.TextXAlignment = Enum.TextXAlignment.Left
+		opBtn.TextColor3 = Color3.new(1, 1, 1)
+		opBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 48)
+		opBtn.Font = Enum.Font.SourceSansBold
+		opBtn.TextSize = 13
+		opBtn.BorderSizePixel = 0
+		opBtn.ZIndex = 51
+		Instance.new("UICorner", opBtn).CornerRadius = UDim.new(0, 5)
+		opBtn.MouseButton1Click:Connect(function()
+			lbl.Text = opcao
+			dropdown.Visible = false
+			DropdownsAbertos[dropdown] = nil
+			if callback then
+				local sucesso, erro = pcall(function() callback(opcao) end)
+				if not sucesso then
+					warn("Erro no callback do dropdown: " .. tostring(erro))
+				end
+			end
+		end)
+	end
+
+	local aberto = false
+	btn.MouseButton1Click:Connect(function()
+		aberto = not aberto
+		if aberto then
+			for dd, _ in pairs(DropdownsAbertos) do
+				if dd ~= dropdown and dd.Parent then
+					dd.Visible = false
+				end
+			end
+
+			local pos = container.AbsolutePosition
+			dropdown.Position = UDim2.new(0, pos.X, 0, pos.Y + 28)
+			DropdownsAbertos[dropdown] = true
+		else
+			DropdownsAbertos[dropdown] = nil
+		end
+		dropdown.Visible = aberto
+	end)
+
+	UserInputService.InputBegan:Connect(function(input, gameProcessed)
+		if gameProcessed then return end
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			local pos = input.Position
+			local ddPos = dropdown.AbsolutePosition
+			local ddSize = dropdown.AbsoluteSize
+			local contPos = container.AbsolutePosition
+			local contSize = container.AbsoluteSize
+
+			local dentroDropdown = pos.X >= ddPos.X and pos.X <= ddPos.X + ddSize.X and
+								   pos.Y >= ddPos.Y and pos.Y <= ddPos.Y + ddSize.Y
+			local dentroContainer = pos.X >= contPos.X and pos.X <= contPos.X + contSize.X and
+									pos.Y >= contPos.Y and pos.Y <= contPos.Y + contSize.Y
+
+			if dropdown.Visible and not dentroDropdown and not dentroContainer then
+				dropdown.Visible = false
+				aberto = false
+				DropdownsAbertos[dropdown] = nil
+			end
+		end
+	end)
+
+	return lbl, dropdown
+end
+
+print("Parte 3 carregada - Toggles, Sliders, Dropdowns")
+
+-- ============================================
+-- PREENCHER ABA VISUAL
+-- ============================================
+criarTituloSecao(FrameVisual, "— ESP / VISUAL —", 4)
+criarToggle(FrameVisual, "Ativar ESP", 10, 22, "ATIVARESP")
+criarToggle(FrameVisual, "ESP Nome", 10, 54, "ESPNOME")
+criarToggle(FrameVisual, "ESP Caixa (Box)", 10, 86, "ESPCAIXA")
+criarToggle(FrameVisual, "ESP Linha (Tracer)", 10, 118, "ESPLINHA")
+criarToggle(FrameVisual, "ESP Vida", 10, 150, "ESPVIDA")
+criarToggle(FrameVisual, "ESP Distancia", 10, 182, "ESPDISTANCIA")
+criarToggle(FrameVisual, "Chams", 10, 214, "ESPCHAMS")
+criarToggle(FrameVisual, "ESP Time", 10, 246, "ESPTIME")
+
+criarSeparador(FrameVisual, 282)
+criarTituloSecao(FrameVisual, "— SUPORTE A NPCs —", 288)
+criarToggle(FrameVisual, "ESP em NPCs", 10, 308, "NPC_ESP")
+
+criarSeparador(FrameVisual, 342)
+criarTituloSecao(FrameVisual, "— COR ESP INIMIGO —", 348)
+
+local coresESP = {
+	Vermelho = Color3.fromRGB(255, 50, 50),
+	Verde = Color3.fromRGB(50, 255, 80),
+	Azul = Color3.fromRGB(50, 80, 255),
+	Branco = Color3.fromRGB(255, 255, 255),
+	Amarelo = Color3.fromRGB(255, 255, 0),
+	Ciano = Color3.fromRGB(0, 220, 255),
+	Rosa = Color3.fromRGB(255, 80, 200)
+}
+
+-- Aplica a cor ESP carregada do arquivo
+CorInimigo = coresESP[Config.COR_ESP] or CorInimigo
+CorChams = CorInimigo
+
+local dropdownLargura = 420
+criarDropdown(FrameVisual, 10, 364, dropdownLargura, {"Vermelho", "Verde", "Azul", "Branco", "Amarelo", "Ciano", "Rosa"}, Config.COR_ESP, function(val)
+	local cor = coresESP[val] or Color3.fromRGB(255, 50, 50)
+	Config.COR_ESP = val
+	CorInimigo = cor
+	CorChams = cor
+end)
+
+-- ============================================
+-- PREENCHER ABA AIMBOT
+-- ============================================
+criarTituloSecao(FrameAimbot, "— AIMBOT —", 4)
+criarToggle(FrameAimbot, "Ativar Aimbot", 10, 22, "ATIVARAIMBOT")
+criarToggle(FrameAimbot, "Exibir FOV", 10, 54, "EXIBIR_AIMFOV")
+criarToggle(FrameAimbot, "Voar Inimigo", 10, 86, "VOAR_INIMIGO")
+criarToggle(FrameAimbot, "Aimbot em NPCs", 10, 118, "NPC_AIMBOT")
+
+local sliderLargura = 200
+criarSlider(FrameAimbot, 10, 155, sliderLargura, 10, 400, FOV_Radius, "FOV", function(val)
+	FOV_Radius = val
+end)
+criarSlider(FrameAimbot, 10, 195, sliderLargura, 1, 100, math.floor(Precisao * 100), "Precisao (%)", function(val)
+	Precisao = math.clamp(val / 100, 0.05, 0.98)
+end)
+criarSlider(FrameAimbot, 10, 235, sliderLargura, 50, 1000, DistanciaMax, "Distancia Max", function(val)
+	DistanciaMax = val
+end)
+criarSlider(FrameAimbot, 240, 155, sliderLargura, 0, 10, VoarAltura, "Voar Altura", function(val)
+	VoarAltura = val
+end)
+
+criarSeparador(FrameAimbot, 280)
+criarTituloSecao(FrameAimbot, "Parte do corpo alvo:", 286, 13)
+criarDropdown(FrameAimbot, 10, 304, 200, {"Cabeca", "Tronco", "Pe"}, Config.ALVO_AIMBOT, function(val)
+	Config.ALVO_AIMBOT = val
+	if val == "Cabeca" then AlvoParte = "Head"
+	elseif val == "Tronco" then AlvoParte = "UpperTorso"
+	elseif val == "Pe" then AlvoParte = "LeftFoot" end
+end)
+local LblAlvo = Instance.new("TextLabel", FrameAimbot)
+LblAlvo.Name = "LblAlvo"
+LblAlvo.Size = UDim2.new(0, 200, 0, 20)
+LblAlvo.Position = UDim2.new(0, 220, 0, 334)
+LblAlvo.BackgroundTransparency = 1
+LblAlvo.Text = "Alvo: " .. Config.ALVO_AIMBOT
+LblAlvo.TextColor3 = Color3.fromRGB(100, 255, 150)
+LblAlvo.Font = Enum.Font.SourceSansBold
+LblAlvo.TextSize = 12
+LblAlvo.TextXAlignment = Enum.TextXAlignment.Left
+
+-- ============================================
+-- PREENCHER ABA HITBOX
+-- ============================================
+criarTituloSecao(FrameHitbox, "— HITBOX EXPANDER —", 4)
+criarToggle(FrameHitbox, "Ativar HitBox", 10, 22, "HITBOX_ATIVAR")
+criarToggle(FrameHitbox, "HitBox em NPCs", 10, 54, "HITBOX_NPC")
+criarSeparador(FrameHitbox, 88)
+criarTituloSecao(FrameHitbox, "— CONFIGURACOES —", 94)
+criarDropdown(FrameHitbox, 10, 110, 200, {"Cabeça", "Tronco"}, Config.HITBOX_PARTE or "Cabeça", function(val)
+	Config.HITBOX_PARTE = val
+	if Config.HITBOX_ATIVAR then limparTodasHitboxes() end
+end)
+local hitboxSliderLargura = 420
+criarSlider(FrameHitbox, 10, 147, hitboxSliderLargura, 1, 50, Config.HITBOX_TAMANHO, "Tamanho", function(val)
+	Config.HITBOX_TAMANHO = val
+end)
+criarSlider(FrameHitbox, 10, 197, hitboxSliderLargura, 0, 10, math.floor(Config.HITBOX_TRANSPARENCIA * 10), "Transparencia", function(val)
+	Config.HITBOX_TRANSPARENCIA = val / 10
+end)
+local LblHitboxInfo = Instance.new("TextLabel", FrameHitbox)
+LblHitboxInfo.Name = "HitboxInfo"
+LblHitboxInfo.Size = UDim2.new(1, -20, 0, 130)
+LblHitboxInfo.Position = UDim2.new(0, 10, 0, 240)
+LblHitboxInfo.BackgroundTransparency = 1
+LblHitboxInfo.Text = [[HITBOX HIBRIDA V4.5:
+
+1. PARTE REAL modificada (visual)
+   • Head/Torso aumentado no client
+   • Massless = true (nao trava)
+
+2. PARTE FAKE invisivel (para hits)
+   • Weld na parte real
+   • CanTouch + CanQuery = true
+   • Intercepta raycasts do client
+
+NOTA: Funciona em jogos com hit
+      detection client-sided]]
+LblHitboxInfo.TextColor3 = Color3.fromRGB(185, 185, 215)
+LblHitboxInfo.Font = Enum.Font.SourceSans
+LblHitboxInfo.TextSize = 13
+LblHitboxInfo.TextXAlignment = Enum.TextXAlignment.Left
+LblHitboxInfo.TextYAlignment = Enum.TextYAlignment.Top
+
+-- ============================================
+-- PREENCHER ABA MISC
+-- ============================================
+criarTituloSecao(FrameMisc, "— COR DO PAINEL —", 4)
+criarDropdown(FrameMisc, 10, 22, 250, {"Vermelho", "Azul", "Verde", "Roxo", "Rosa", "Ciano", "Laranja"}, Config.COR_DO_PAINEL, function(val)
+	CorPainel = Cores[val] or Color3.fromRGB(200, 0, 0)
+	Config.COR_DO_PAINEL = val
+	atualizarCores()
+end)
+criarSeparador(FrameMisc, 57)
+criarTituloSecao(FrameMisc, "— FUNCOES —", 63)
+criarToggle(FrameMisc, "Speed (100)", 10, 82, "SPEED_BETA")
+criarToggle(FrameMisc, "Movimentacao Spin", 10, 114, "SPIN")
+criarToggle(FrameMisc, "Team Check", 240, 82, "TEAMCHECK")
+
+criarSeparador(FrameMisc, 146)
+criarTituloSecao(FrameMisc, "— SEGURANCA —", 152)
+local LblPanic = Instance.new("TextLabel", FrameMisc)
+LblPanic.Name = "LblPanic"
+LblPanic.Size = UDim2.new(1, -20, 0, 20)
+LblPanic.Position = UDim2.new(0, 10, 0, 172)
+LblPanic.BackgroundTransparency = 1
+LblPanic.Text = "Panic Key: DELETE (desliga TUDO)"
+LblPanic.TextColor3 = Color3.fromRGB(255, 80, 80)
+LblPanic.Font = Enum.Font.SourceSansBold
+LblPanic.TextSize = 13
+LblPanic.TextXAlignment = Enum.TextXAlignment.Left
+
+-- ============================================
+-- PREENCHER ABA OUTROS
+-- ============================================
+criarTituloSecao(FrameOutros, "— OUTROS —", 4)
+criarSeparador(FrameOutros, 22)
+
+criarToggle(FrameOutros, "Salvar ao sair", 10, 30, "SALVAR_CONFIG")
+
+local TeleportService = game:GetService("TeleportService")
+local buscandoServer = false
+
+criarSeparador(FrameOutros, 66)
+criarTituloSecao(FrameOutros, "— SERVIDOR —", 72)
+
+local BtnServerBR = Instance.new("TextButton", FrameOutros)
+BtnServerBR.Name = "BtnServerBR"
+BtnServerBR.Size = UDim2.new(0, 200, 0, 28)
+BtnServerBR.Position = UDim2.new(0, 10, 0, 92)
+BtnServerBR.BackgroundColor3 = CorPainel
+BtnServerBR.TextColor3 = Color3.new(1, 1, 1)
+BtnServerBR.Font = Enum.Font.SourceSansBold
+BtnServerBR.TextSize = 13
+BtnServerBR.Text = "Ir para server brasileiro"
+BtnServerBR.BorderSizePixel = 0
+BtnServerBR.AutoButtonColor = true
+Instance.new("UICorner", BtnServerBR).CornerRadius = UDim.new(0, 7)
+
+local LblServerBR = Instance.new("TextLabel", FrameOutros)
+LblServerBR.Name = "LblServerBR"
+LblServerBR.Size = UDim2.new(1, -20, 0, 48)
+LblServerBR.Position = UDim2.new(0, 10, 0, 124)
+LblServerBR.BackgroundTransparency = 1
+LblServerBR.Text = "Escolhe o server com menor ping (mais perto do Brasil)."
+LblServerBR.TextColor3 = Color3.fromRGB(185, 185, 215)
+LblServerBR.Font = Enum.Font.SourceSans
+LblServerBR.TextSize = 12
+LblServerBR.TextWrapped = true
+LblServerBR.TextXAlignment = Enum.TextXAlignment.Left
+LblServerBR.TextYAlignment = Enum.TextYAlignment.Top
+
+local function statusServerBR(txt)
+	if LblServerBR and LblServerBR.Parent then LblServerBR.Text = txt end
+end
+
+local function requisitar(url)
+	local ok, corpo = pcall(function() return game:HttpGet(url) end)
+	if ok and corpo then return corpo end
+	local req = (syn and syn.request) or http_request or request
+	if req then
+		local ok2, res = pcall(function() return req({Url = url, Method = "GET"}) end)
+		if ok2 and res and res.Body then return res.Body end
+	end
+	return nil
+end
+
+-- Lista de servers ja tentados (persistente entre teleportes)
+local ARQ_TENTADOS = "Hesiz_ServersTentados.json"
+local Tentados = {}
+pcall(function()
+	if temFS and isfile(ARQ_TENTADOS) then
+		local lista = HttpService:JSONDecode(readfile(ARQ_TENTADOS))
+		if type(lista) == "table" then Tentados = lista end
+	end
+end)
+Tentados[game.JobId] = true
+
+local function salvarTentados()
+	if not temFS then return end
+	pcall(function()
+		local n = 0
+		for _ in pairs(Tentados) do n = n + 1 end
+		if n > 60 then Tentados = {[game.JobId] = true} end
+		writefile(ARQ_TENTADOS, HttpService:JSONEncode(Tentados))
+	end)
+end
+
+local function pingAtual()
+	local ok, v = pcall(function()
+		return game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
+	end)
+	if ok and v then return math.floor(v) end
+	return nil
+end
+
+-- Mostra o motivo real quando o Roblox rejeita o teleporte de forma assincrona
+-- (ex: server ficou cheio/fechou entre a busca e o teleporte, ou throttle).
+pcall(function()
+	TeleportService.TeleportInitFailed:Connect(function(jogador, resultado, mensagemErro)
+		if jogador ~= LocalPlayer then return end
+		statusServerBR("Falha ao teleportar: " .. tostring(resultado) .. " - " .. tostring(mensagemErro))
+		buscandoServer = false
+	end)
+end)
+
+local UltimaTentativaTP = 0
+
+local function irParaServerBrasileiro()
+	if buscandoServer then return end
+	local agora = tick()
+	if agora - UltimaTentativaTP < 8 then
+		statusServerBR("Aguarde alguns segundos antes de tentar de novo (evita bloqueio do Roblox).")
+		return
+	end
+	UltimaTentativaTP = agora
+	buscandoServer = true
+	task.spawn(function()
+		statusServerBR("Buscando servers...")
+		local candidatos = {}
+		local cursor = ""
+		for pagina = 1, 5 do
+			local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+			if cursor ~= "" then url = url .. "&cursor=" .. cursor end
+			local corpo = requisitar(url)
+			if not corpo then break end
+			local ok, dados = pcall(function() return HttpService:JSONDecode(corpo) end)
+			if not ok or type(dados) ~= "table" or type(dados.data) ~= "table" then break end
+			for _, srv in ipairs(dados.data) do
+				if not Tentados[srv.id] and srv.ping and srv.playing and srv.maxPlayers and srv.playing < srv.maxPlayers then
+					table.insert(candidatos, srv)
+				end
+			end
+			cursor = dados.nextPageCursor or ""
+			if cursor == "" then break end
+		end
+		if #candidatos == 0 then
+			Tentados = {[game.JobId] = true}
+			salvarTentados()
+			statusServerBR("Sem servers novos com ping. Lista limpa, clique de novo.")
+			buscandoServer = false
+			return
+		end
+		table.sort(candidatos, function(a, b) return a.ping < b.ping end)
+
+		if not TeleportService then
+			statusServerBR("TeleportService indisponivel neste executor.")
+			buscandoServer = false
+			return
+		end
+
+		-- tenta ate 3 candidatos (o server escolhido pode ter fechado/enchido entre a busca e o teleporte)
+		local maxTentativas = math.min(3, #candidatos)
+		local ultimoErro = nil
+		for i = 1, maxTentativas do
+			local escolhido = candidatos[i]
+			Tentados[escolhido.id] = true
+			statusServerBR("Teleportando (ping da lista: " .. tostring(escolhido.ping) .. "ms)... tentativa " .. i .. "/" .. maxTentativas)
+			local ok, erro = pcall(function()
+				TeleportService:TeleportToPlaceInstance(game.PlaceId, escolhido.id, LocalPlayer)
+			end)
+			if ok then
+				salvarTentados()
+				task.wait(6)
+				buscandoServer = false
+				return
+			end
+			ultimoErro = erro
+			task.wait(0.5)
+		end
+
+		salvarTentados()
+		statusServerBR("Falha ao teleportar (" .. tostring(ultimoErro) .. "). Tente de novo em alguns segundos.")
+		buscandoServer = false
+	end)
+end
+
+-- Mostra o ping do server atual para voce saber se caiu num server BR
+task.spawn(function()
+	while ScreenGui.Parent do
+		if not buscandoServer then
+			local p = pingAtual()
+			if p then
+				statusServerBR("Ping atual: " .. p .. "ms (no Brasil costuma ser abaixo de 80ms). Se estiver alto, clique de novo.")
+			end
+		end
+		task.wait(2)
+	end
+end)
+
+BtnServerBR.MouseButton1Click:Connect(irParaServerBrasileiro)
+
+-- ============================================
+-- PREENCHER ABA TP
+-- ============================================
+criarTituloSecao(FrameTP, "— TP STALKER —", 4)
+criarToggle(FrameTP, "TP stalker", 10, 22, "TP_STALKER")
+criarSlider(FrameTP, 10, 58, 420, 1, 30, Config.TP_DISTANCIA, "Distancia", function(val)
+	Config.TP_DISTANCIA = val
+end)
+
+criarSeparador(FrameTP, 100)
+criarTituloSecao(FrameTP, "— TELEPORTAR PARA PLAYER —", 106)
+
+local SelecionadoTP = nil
+
+local BtnListaTP = Instance.new("TextButton", FrameTP)
+BtnListaTP.Name = "BtnListaTP"
+BtnListaTP.Size = UDim2.new(0, 420, 0, 26)
+BtnListaTP.Position = UDim2.new(0, 10, 0, 126)
+BtnListaTP.BackgroundColor3 = Color3.fromRGB(22, 22, 38)
+BtnListaTP.TextColor3 = Color3.new(1, 1, 1)
+BtnListaTP.Font = Enum.Font.SourceSansBold
+BtnListaTP.TextSize = 13
+BtnListaTP.Text = "Selecionar player  v"
+BtnListaTP.BorderSizePixel = 0
+BtnListaTP.AutoButtonColor = true
+Instance.new("UICorner", BtnListaTP).CornerRadius = UDim.new(0, 7)
+
+-- Lista de players (fica no ScreenGui para nao ser cortada pelo scroll)
+local ListaTP = Instance.new("ScrollingFrame")
+ListaTP.Name = "ListaPlayersTP"
+ListaTP.Size = UDim2.new(0, 420, 0, 125)
+ListaTP.BackgroundColor3 = Color3.fromRGB(16, 16, 28)
+ListaTP.BorderSizePixel = 0
+ListaTP.ZIndex = 50
+ListaTP.Visible = false
+ListaTP.ScrollBarThickness = 4
+ListaTP.CanvasSize = UDim2.new(0, 0, 0, 0)
+ListaTP.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ListaTP.Parent = ScreenGui
+Instance.new("UICorner", ListaTP).CornerRadius = UDim.new(0, 7)
+local ListaTPStroke = Instance.new("UIStroke", ListaTP)
+ListaTPStroke.Color = CorPainel
+ListaTPStroke.Thickness = 1
+
+local ListaTPLayout = Instance.new("UIListLayout", ListaTP)
+ListaTPLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local BtnTPUnico = Instance.new("TextButton", FrameTP)
+BtnTPUnico.Name = "BtnTPUnico"
+BtnTPUnico.Size = UDim2.new(0, 200, 0, 26)
+BtnTPUnico.Position = UDim2.new(0, 10, 0, 160)
+BtnTPUnico.BackgroundColor3 = CorPainel
+BtnTPUnico.TextColor3 = Color3.new(1, 1, 1)
+BtnTPUnico.Font = Enum.Font.SourceSansBold
+BtnTPUnico.TextSize = 13
+BtnTPUnico.Text = "So TP"
+BtnTPUnico.BorderSizePixel = 0
+Instance.new("UICorner", BtnTPUnico).CornerRadius = UDim.new(0, 7)
+
+criarToggle(FrameTP, "Loop TP", 230, 159, "LOOP_TP")
+
+local LblSelTP = Instance.new("TextLabel", FrameTP)
+LblSelTP.Name = "LblSelTP"
+LblSelTP.Size = UDim2.new(0, 420, 0, 18)
+LblSelTP.Position = UDim2.new(0, 10, 0, 192)
+LblSelTP.BackgroundTransparency = 1
+LblSelTP.Text = "Nenhum player selecionado"
+LblSelTP.TextColor3 = Color3.fromRGB(185, 185, 215)
+LblSelTP.Font = Enum.Font.SourceSans
+LblSelTP.TextSize = 12
+LblSelTP.TextXAlignment = Enum.TextXAlignment.Left
+
+local function fecharListaTP()
+	ListaTP.Visible = false
+end
+
+local function atualizarSelecaoTP()
+	if SelecionadoTP and SelecionadoTP.Parent then
+		BtnListaTP.Text = SelecionadoTP.DisplayName .. " (@" .. SelecionadoTP.Name .. ")  v"
+		LblSelTP.Text = "Selecionado: " .. SelecionadoTP.DisplayName
+	else
+		SelecionadoTP = nil
+		BtnListaTP.Text = "Selecionar player  v"
+		LblSelTP.Text = "Nenhum player selecionado"
+	end
+end
+
+local function preencherListaTP()
+	for _, filho in pairs(ListaTP:GetChildren()) do
+		if filho:IsA("TextButton") or filho:IsA("TextLabel") then filho:Destroy() end
+	end
+	local n = 0
+	for _, jogador in pairs(Players:GetPlayers()) do
+		if jogador ~= LocalPlayer then
+			n = n + 1
+			local item = Instance.new("TextButton")
+			item.Name = jogador.Name
+			item.Size = UDim2.new(1, -6, 0, 25)
+			item.BackgroundColor3 = Color3.fromRGB(28, 28, 48)
+			item.TextColor3 = Color3.new(1, 1, 1)
+			item.Font = Enum.Font.SourceSansBold
+			item.TextSize = 13
+			item.TextXAlignment = Enum.TextXAlignment.Left
+			item.Text = "  " .. jogador.DisplayName .. " (@" .. jogador.Name .. ")"
+			item.BorderSizePixel = 0
+			item.ZIndex = 51
+			item.LayoutOrder = n
+			item.Parent = ListaTP
+			item.MouseButton1Click:Connect(function()
+				SelecionadoTP = jogador
+				atualizarSelecaoTP()
+				fecharListaTP()
+			end)
+		end
+	end
+	if n == 0 then
+		local vazio = Instance.new("TextLabel")
+		vazio.Size = UDim2.new(1, 0, 0, 25)
+		vazio.BackgroundTransparency = 1
+		vazio.TextColor3 = Color3.fromRGB(185, 185, 215)
+		vazio.Font = Enum.Font.SourceSans
+		vazio.TextSize = 13
+		vazio.Text = "Nenhum outro player no jogo"
+		vazio.ZIndex = 51
+		vazio.Parent = ListaTP
+	end
+end
+
+BtnListaTP.MouseButton1Click:Connect(function()
+	if ListaTP.Visible then
+		fecharListaTP()
+		return
+	end
+	preencherListaTP()
+	local pos = BtnListaTP.AbsolutePosition
+	ListaTP.Position = UDim2.new(0, pos.X, 0, pos.Y + 28)
+	ListaTP.Visible = true
+end)
+
+-- Fecha a lista ao clicar fora
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if not ListaTP.Visible then return end
+		local p = input.Position
+		local a, t = ListaTP.AbsolutePosition, ListaTP.AbsoluteSize
+		local b, bt = BtnListaTP.AbsolutePosition, BtnListaTP.AbsoluteSize
+		local dentroLista = p.X >= a.X and p.X <= a.X + t.X and p.Y >= a.Y and p.Y <= a.Y + t.Y
+		local dentroBtn = p.X >= b.X and p.X <= b.X + bt.X and p.Y >= b.Y and p.Y <= b.Y + bt.Y
+		if not dentroLista and not dentroBtn then fecharListaTP() end
+	end
+end)
+
+-- Fecha a lista ao trocar de aba
+for _, b in pairs(BotoesAbas) do
+	b.MouseButton1Click:Connect(fecharListaTP)
+end
+
+-- Limpa selecao se o player sair
+Players.PlayerRemoving:Connect(function(jogador)
+	if jogador == SelecionadoTP then
+		SelecionadoTP = nil
+		atualizarSelecaoTP()
+	end
+end)
+
+local function teleportarParaSelecionado()
+	if not SelecionadoTP or not SelecionadoTP.Parent then
+		atualizarSelecaoTP()
+		return false
+	end
+	if not estaVivo(SelecionadoTP) then return false end
+	local meuHrp = LocalPlayer.Character and getParteAlvo(LocalPlayer.Character, "Raiz")
+	local alvoHrp = SelecionadoTP.Character and getParteAlvo(SelecionadoTP.Character, "Raiz")
+	if not meuHrp or not alvoHrp then return false end
+	-- +Z local = atras do alvo
+	meuHrp.CFrame = alvoHrp.CFrame * CFrame.new(0, 0, 3)
+	meuHrp.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+	return true
+end
+
+BtnTPUnico.MouseButton1Click:Connect(function()
+	pcall(teleportarParaSelecionado)
+end)
+
+RunService.Heartbeat:Connect(function()
+	if PanicAtivado or not Config.LOOP_TP then return end
+	pcall(teleportarParaSelecionado)
+end)
+
+print("Parte 4 carregada - Abas preenchidas")
+
+-- ============================================
+-- ATALHOS DE TECLADO
+-- ============================================
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.KeyCode == Enum.KeyCode.Home then
+		if MainFrame.Visible then
+			MainFrame.Visible = false
+			MiniFrame.Visible = true
+		else
+			MiniFrame.Visible = false
+			MainFrame.Visible = true
+			atualizarCores()
+		end
+	end
+	if input.KeyCode == Enum.KeyCode.F1 then
+		Config.VOAR_INIMIGO = not Config.VOAR_INIMIGO
+		local btn = BotoesToggle["VOAR_INIMIGO"]
+		if btn and btn.Parent then
+			btn.BackgroundColor3 = Config.VOAR_INIMIGO and CorPainel or Color3.fromRGB(20, 20, 40)
+			btn.Text = Config.VOAR_INIMIGO and "✓" or ""
+		end
+		if Config.VOAR_INIMIGO then
+			ativarVoarInimigo()
+			print("Hesiz: Voar Inimigo ATIVADO (F1)")
+		else
+			limparVoar()
+			print("Hesiz: Voar Inimigo DESATIVADO (F1)")
+		end
+	end
+	-- PANIC KEY
+	if input.KeyCode == Config.PANIC_KEY then
+		PanicAtivado = not PanicAtivado
+		if PanicAtivado then
+			-- Panic nao apaga o arquivo salvo (preserva a config anterior)
+			for key, _ in pairs(Config) do
+				if type(Config[key]) == "boolean" and key ~= "PANIC_KEY" then
+					Config[key] = false
+				end
+			end
+			for key, btn in pairs(BotoesToggle) do
+				if btn and btn.Parent then
+					btn.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
+					btn.Text = ""
+				end
+			end
+			for jogador, _ in pairs(ESP_Objects) do
+				destruirESP(jogador)
+			end
+			for npc, _ in pairs(ESP_NPCs) do
+				destruirESPNPC(npc)
+			end
+			limparTodasHitboxes()
+			limparVoar()
+			desativarSpin()
+			MainFrame.Visible = false
+			MiniFrame.Visible = false
+			ScreenGui.Enabled = false
+			print("Hesiz: PANIC KEY ATIVADO - TUDO DESLIGADO!")
+		else
+			ScreenGui.Enabled = true
+			MiniFrame.Visible = true
+			print("Hesiz: PANIC KEY DESATIVADO - GUI restaurada")
+		end
+	end
+end)
+
+print("Parte 4.5 carregada - Atalhos de teclado")
+
+-- ============================================
+-- AIMBOT
+-- ============================================
+local CirculoFOV = nil
+pcall(function()
+	CirculoFOV = Instance.new("Frame")
+	CirculoFOV.Name = "FOVCircle"
+	CirculoFOV.Size = UDim2.new(0, FOV_Radius * 2, 0, FOV_Radius * 2)
+	CirculoFOV.BackgroundTransparency = 1
+	CirculoFOV.BorderSizePixel = 0
+	CirculoFOV.Visible = false
+	CirculoFOV.ZIndex = 100
+	local stroke = Instance.new("UIStroke", CirculoFOV)
+	stroke.Color = CorFov
+	stroke.Thickness = 2
+	local corner = Instance.new("UICorner", CirculoFOV)
+	corner.CornerRadius = UDim.new(1, 0)
+	CirculoFOV.Parent = ScreenGui
+end)
+
+local function pegarAlvoAimbot()
+	local centro = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+	local alvo = nil
+	local menorDistancia = FOV_Radius
+
+	for _, jogador in pairs(Players:GetPlayers()) do
+		if jogador == LocalPlayer then continue end
+		if Config.TEAMCHECK and mesmoTime(jogador) then continue end
+		if not estaVivo(jogador) then continue end
+		local personagem = jogador.Character
+		if not personagem then continue end
+		local parte = getParteAlvo(personagem, AlvoParte)
+		if not parte then continue end
+		local char = LocalPlayer.Character
+		local hrp = char and getParteAlvo(char, "Raiz")
+		if hrp and (parte.Position - hrp.Position).Magnitude > DistanciaMax then continue end
+		if not Config.XRAY and not visivel(jogador) then continue end
+		local pos, visivel_tela = Camera:WorldToViewportPoint(parte.Position)
+		if not visivel_tela then continue end
+		local telaPos = Vector2.new(pos.X, pos.Y)
+		local dist = (telaPos - centro).Magnitude
+		if dist < menorDistancia then
+			menorDistancia = dist
+			alvo = {player = jogador, part = parte, screenPos = telaPos, tipo = "player"}
+		end
+	end
+
+	if Config.NPC_AIMBOT then
+		for _, npc in pairs(getNPCs()) do
+			if not npc or not npc.Parent then continue end
+			if not estaVivoNPC(npc) then continue end
+			local parte = getParteAlvo(npc, AlvoParte)
+			if not parte then continue end
+			local char = LocalPlayer.Character
+			local hrp = char and getParteAlvo(char, "Raiz")
+			if hrp and (parte.Position - hrp.Position).Magnitude > DistanciaMax then continue end
+			if not Config.XRAY and not visivelNPC(npc) then continue end
+			local pos, visivel_tela = Camera:WorldToViewportPoint(parte.Position)
+			if not visivel_tela then continue end
+			local telaPos = Vector2.new(pos.X, pos.Y)
+			local dist = (telaPos - centro).Magnitude
+			if dist < menorDistancia then
+				menorDistancia = dist
+				alvo = {npc = npc, part = parte, screenPos = telaPos, tipo = "npc"}
+			end
+		end
+	end
+
+	return alvo
+end
+
+-- ============================================
+-- LOOP PRINCIPAL
+-- ============================================
+local UltimoHitboxUpdate = 0
+
+RunService.RenderStepped:Connect(function(dt)
+	if PanicAtivado then return end
+	pcall(function()
+		local tamanhoTela = Camera.ViewportSize
+		local centro = Vector2.new(tamanhoTela.X / 2, tamanhoTela.Y / 2)
+
+		if tick() - UltimoHitboxUpdate > 1 then
+			UltimoHitboxUpdate = tick()
+			if Config.VOAR_INIMIGO then
+				if #ConexoesVoar == 0 then ativarVoarInimigo() end
+			elseif #ConexoesVoar > 0 then
+				limparVoar()
+			end
+		end
+
+		if tick() % 0.5 < dt then
+			pcall(atualizarHitboxLoop)
+		end
+
+		local alvoAimbot = nil
+		if Config.ATIVARAIMBOT then
+			alvoAimbot = pegarAlvoAimbot()
+			if alvoAimbot then
+				local cf = Camera.CFrame
+				local direcao = (alvoAimbot.part.Position - cf.Position).Unit
+				Camera.CFrame = cf:Lerp(CFrame.new(cf.Position, cf.Position + direcao), Precisao)
+				if LblAlvo and LblAlvo.Parent then
+					if alvoAimbot.tipo == "npc" then
+						LblAlvo.Text = "Alvo: " .. Config.ALVO_AIMBOT .. " | [NPC] Travado!"
+					else
+						LblAlvo.Text = "Alvo: " .. Config.ALVO_AIMBOT .. " | Travado!"
+					end
+					LblAlvo.TextColor3 = Color3.fromRGB(50, 255, 100)
+				end
+			elseif LblAlvo and LblAlvo.Parent then
+				LblAlvo.Text = "Alvo: " .. Config.ALVO_AIMBOT
+				LblAlvo.TextColor3 = Color3.fromRGB(100, 255, 150)
+			end
+		else
+			if LblAlvo and LblAlvo.Parent then
+				LblAlvo.Text = "Alvo: " .. Config.ALVO_AIMBOT
+				LblAlvo.TextColor3 = Color3.fromRGB(100, 255, 150)
+			end
+		end
+
+		if CirculoFOV then
+			CirculoFOV.Size = UDim2.new(0, FOV_Radius * 2, 0, FOV_Radius * 2)
+			CirculoFOV.Position = UDim2.new(0, centro.X - FOV_Radius, 0, centro.Y - FOV_Radius)
+			CirculoFOV.Visible = Config.EXIBIR_AIMFOV
+			pcall(function()
+				if CirculoFOV:FindFirstChild("UIStroke") then
+					CirculoFOV.UIStroke.Color = (Config.ATIVARAIMBOT and alvoAimbot) and CorAlvo or CorFov
+				end
+			end)
+		end
+
+		for _, jogador in pairs(Players:GetPlayers()) do
+			if jogador ~= LocalPlayer then
+				if Config.ATIVARESP then
+					pcall(function()
+						if not ESP_Objects[jogador] or not ESP_Objects[jogador].Container or not ESP_Objects[jogador].Container.Parent then
+							criarESP(jogador)
+						end
+						atualizarESP(jogador)
+					end)
+				else
+					pcall(function() destruirESP(jogador) end)
+				end
+			end
+		end
+
+		if Config.ATIVARESP and Config.NPC_ESP then
+			local npcs = getNPCs()
+			for npc, _ in pairs(ESP_NPCs) do
+				if not npc or not npc.Parent then
+					destruirESPNPC(npc)
+				end
+			end
+			for _, npc in pairs(npcs) do
+				pcall(function()
+					if not ESP_NPCs[npc] or not ESP_NPCs[npc].Container or not ESP_NPCs[npc].Container.Parent then
+						criarESPNPC(npc)
+					end
+					atualizarESPNPC(npc)
+				end)
+			end
+		else
+			for npc, _ in pairs(ESP_NPCs) do
+				pcall(function() destruirESPNPC(npc) end)
+			end
+		end
+	end)
+end)
+
+print("Parte 5 carregada - Aimbot e Loop Principal")
+
+-- ============================================
+-- EVENTOS DE JOGADORES
+-- ============================================
+local ConexoesCharacterAdded = {}
+
+for _, jogador in pairs(Players:GetPlayers()) do
+	if jogador ~= LocalPlayer then
+		if ConexoesCharacterAdded[jogador] then
+			pcall(function() ConexoesCharacterAdded[jogador]:Disconnect() end)
+		end
+		ConexoesCharacterAdded[jogador] = jogador.CharacterAdded:Connect(function(novoPersonagem)
+			destruirESP(jogador)
+			destruirSkeletonJogador(jogador)
+			destruirChamsJogador(jogador)
+
+			if Config.VOAR_INIMIGO then
+				if DadosVoar[jogador] then DadosVoar[jogador].ativo = false end
+				aplicarVoarPersonagem(jogador, novoPersonagem)
+			end
+		end)
+		if jogador.Character then
+			aplicarVoarPersonagem(jogador, jogador.Character)
+		end
+	end
+end
+
+Players.PlayerAdded:Connect(function(jogador)
+	if jogador == LocalPlayer then return end
+	if ConexoesCharacterAdded[jogador] then
+		pcall(function() ConexoesCharacterAdded[jogador]:Disconnect() end)
+	end
+	ConexoesCharacterAdded[jogador] = jogador.CharacterAdded:Connect(function(novoPersonagem)
+		destruirESP(jogador)
+		destruirSkeletonJogador(jogador)
+		destruirChamsJogador(jogador)
+
+		if Config.VOAR_INIMIGO then
+			if DadosVoar[jogador] then DadosVoar[jogador].ativo = false end
+			aplicarVoarPersonagem(jogador, novoPersonagem)
+		end
+	end)
+	if jogador.Character then
+		aplicarVoarPersonagem(jogador, jogador.Character)
+	end
+end)
+
+Players.PlayerRemoving:Connect(function(jogador)
+	if jogador == LocalPlayer then
+		salvarConfig()
+	end
+	if ConexoesCharacterAdded[jogador] then
+		pcall(function() ConexoesCharacterAdded[jogador]:Disconnect() end)
+		ConexoesCharacterAdded[jogador] = nil
+	end
+	DadosVoar[jogador] = nil
+	destruirESP(jogador)
+end)
+
+-- ============================================
+-- LIMPEZA / RESPAWN LOCAL
+-- ============================================
+LocalPlayer.CharacterAdded:Connect(function()
+	task.wait(1)
+	if Config.SPEED_BETA then
+		local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			humanoid.WalkSpeed = WalkSpeedMod
+		end
+	end
+end)
+
+ScreenGui.Destroying:Connect(function()
+	salvarConfig()
+	VisibilidadeLoopAtivo = false
+	limparVoar()
+	limparTodasHitboxes()
+	for jogador, _ in pairs(ESP_Objects) do
+		destruirESP(jogador)
+	end
+	for npc, _ in pairs(ESP_NPCs) do
+		destruirESPNPC(npc)
+	end
+end)
+
+-- ============================================
+-- AUTOSAVE (garantia principal, principalmente no mobile)
+-- ============================================
+task.spawn(function()
+	while task.wait(5) do
+		if ScreenGui.Parent == nil then break end
+		salvarConfig()
+	end
+end)
+
+-- ============================================
+-- REAPLICA FUNCOES CARREGADAS DO ARQUIVO
+-- ============================================
+task.defer(function()
+	if Config.SPEED_BETA then
+		local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+		if hum then hum.WalkSpeed = WalkSpeedMod end
+	end
+	if Config.SPIN then ativarSpin() end
+	if Config.VOAR_INIMIGO then ativarVoarInimigo() end
+	atualizarCores()
+end)
+
+print("Hesiz V5.17 - CARREGADO COM SUCESSO!")
+if temFS then
+	print("Salvar ao sair: disponivel (" .. ARQUIVO_CONFIG .. ")")
+else
+	print("Salvar ao sair: indisponivel (executor sem writefile/readfile)")
+end
