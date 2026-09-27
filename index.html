@@ -13,9 +13,7 @@
             box-sizing: border-box;
         }
 
-        /* =========================
-           FUNDO ESPACIAL
-        ========================= */
+        /* FUNDO ESPACIAL */
 
         body {
             margin: 0;
@@ -35,36 +33,29 @@
                     rgba(80, 60, 150, 0.25) 0,
                     transparent 25%
                 ),
-
                 radial-gradient(
                     circle at 80% 70%,
                     rgba(30, 70, 140, 0.25) 0,
                     transparent 30%
                 ),
-
                 radial-gradient(
                     circle at 50% 100%,
                     rgba(90, 30, 120, 0.20) 0,
                     transparent 35%
                 ),
-
                 #03030b;
 
             position: relative;
-
             overflow: hidden;
         }
 
 
-        /* =========================
-           ESTRELAS
-        ========================= */
+        /* ESTRELAS */
 
         body::before {
             content: "";
 
             position: fixed;
-
             inset: 0;
 
             background-image:
@@ -147,24 +138,18 @@
         }
 
 
-        /* =========================
-           CONTAINER
-        ========================= */
+        /* CONTAINER */
 
         .container {
             width: 100%;
-
             max-width: 500px;
 
             position: relative;
-
             z-index: 2;
         }
 
 
-        /* =========================
-           CAIXA PRINCIPAL
-        ========================= */
+        /* CAIXA */
 
         .caixa {
             width: 100%;
@@ -192,13 +177,10 @@
         }
 
 
-        /* =========================
-           TÍTULOS
-        ========================= */
+        /* TÍTULOS */
 
         h1 {
             margin-top: 0;
-
             margin-bottom: 25px;
 
             font-size: 28px;
@@ -212,20 +194,16 @@
 
         p {
             font-size: 17px;
-
             line-height: 1.5;
 
             color: #d8d8e8;
         }
 
 
-        /* =========================
-           BOTÕES
-        ========================= */
+        /* BOTÕES */
 
         .botoes {
             display: flex;
-
             flex-direction: column;
 
             gap: 15px;
@@ -242,7 +220,6 @@
             padding: 14px 20px;
 
             border: none;
-
             border-radius: 12px;
 
             background:
@@ -255,7 +232,6 @@
             color: white;
 
             font-size: 17px;
-
             font-weight: bold;
 
             cursor: pointer;
@@ -285,9 +261,7 @@
         }
 
 
-        /* =========================
-           BOTÃO CONCLUÍDO
-        ========================= */
+        /* BOTÃO CONCLUÍDO */
 
         .concluido {
             background:
@@ -302,9 +276,7 @@
         }
 
 
-        /* =========================
-           FINALIZAR
-        ========================= */
+        /* FINALIZAR */
 
         #botaoFinalizar {
             margin-top: 20px;
@@ -320,9 +292,7 @@
         }
 
 
-        /* =========================
-           BOTÃO VOLTAR
-        ========================= */
+        /* VOLTAR */
 
         #botaoVoltar {
             background:
@@ -336,9 +306,7 @@
         }
 
 
-        /* =========================
-           TELAS
-        ========================= */
+        /* TELAS */
 
         #telaEspera,
         #telaFinal,
@@ -347,9 +315,7 @@
         }
 
 
-        /* =========================
-           CONTADOR
-        ========================= */
+        /* CONTADOR */
 
         #contador {
             font-size: 50px;
@@ -365,13 +331,10 @@
         }
 
 
-        /* =========================
-           CARREGAMENTO
-        ========================= */
+        /* CARREGAMENTO */
 
         .spinner {
             width: 60px;
-
             height: 60px;
 
             margin: 25px auto;
@@ -399,9 +362,25 @@
         }
 
 
-        /* =========================
-           FRASE FINAL
-        ========================= */
+        /* TEXTO ACIMA DA FRASE */
+
+        .texto-final {
+            font-size: 20px;
+
+            font-weight: bold;
+
+            color: #ffffff;
+
+            margin-bottom: 15px;
+
+            line-height: 1.4;
+
+            text-shadow:
+                0 0 8px rgba(120, 100, 255, 0.4);
+        }
+
+
+        /* FRASE FINAL */
 
         .frase {
             background:
@@ -435,9 +414,7 @@
         }
 
 
-        /* =========================
-           CELULAR
-        ========================= */
+        /* CELULAR */
 
         @media (max-width: 600px) {
 
@@ -474,12 +451,21 @@
                 font-size: 42px;
             }
 
+
+            .texto-final {
+                font-size: 18px;
+            }
+
+
+            .frase {
+                font-size: 16px;
+                padding: 17px;
+            }
+
         }
 
 
-        /* =========================
-           CELULARES PEQUENOS
-        ========================= */
+        /* CELULARES PEQUENOS */
 
         @media (max-width: 380px) {
 
@@ -502,6 +488,11 @@
                 font-size: 15px;
             }
 
+
+            .texto-final {
+                font-size: 17px;
+            }
+
         }
 
     </style>
@@ -515,9 +506,7 @@
 <div class="container">
 
 
-    <!-- =========================
-         TELA INICIAL
-    ========================= -->
+    <!-- TELA INICIAL -->
 
     <div class="caixa" id="telaInicial">
 
@@ -572,9 +561,7 @@
     </div>
 
 
-    <!-- =========================
-         TELA DE CARREGAMENTO
-    ========================= -->
+    <!-- TELA DE CARREGAMENTO -->
 
     <div
         class="caixa"
@@ -596,9 +583,7 @@
     </div>
 
 
-    <!-- =========================
-         TELA DE ESPERA
-    ========================= -->
+    <!-- TELA DE ESPERA -->
 
     <div
         class="caixa"
@@ -636,9 +621,7 @@
     </div>
 
 
-    <!-- =========================
-         TELA FINAL
-    ========================= -->
+    <!-- TELA FINAL -->
 
     <div
         class="caixa"
@@ -650,11 +633,16 @@
         </h1>
 
 
+        <div class="texto-final">
+            Agora cole esse script no executor
+        </div>
+
+
         <div
             class="frase"
             id="frase"
         >
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/MeuUsername/Meu-script/refs/heads/main/Hesiz?token=GHSAT0AAAAAAEKLI6S2Q6WCMZOM36SCFUCQ2VZFJHQ"))()
+            Parabéns! Você concluiu todos os passos.
         </div>
 
 
@@ -676,9 +664,7 @@
 <script>
 
 
-    /* =========================
-       VARIÁVEIS
-    ========================= */
+    /* VARIÁVEIS */
 
     let passoAtual = 0;
 
@@ -695,53 +681,38 @@
 
 
 
-    /* =========================
-       INICIAR PASSO
-    ========================= */
+    /* INICIAR PASSO */
 
     function iniciarPasso(numero) {
 
 
-        // Não permite clicar novamente
-        // em um botão já concluído
-
         if (passosConcluidos[numero]) {
-
             return;
-
         }
 
 
         passoAtual = numero;
 
 
-        // Esconde tela inicial
-
         document
             .getElementById("telaInicial")
             .style.display = "none";
 
-
-        // Mostra carregamento
 
         document
             .getElementById("telaCarregamento")
             .style.display = "block";
 
 
-        // Espera 1 segundo
+        /* CARREGAMENTO DE 1 SEGUNDO */
 
         setTimeout(function() {
 
-
-            // Esconde carregamento
 
             document
                 .getElementById("telaCarregamento")
                 .style.display = "none";
 
-
-            // Mostra tela dos 15 segundos
 
             document
                 .getElementById("telaEspera")
@@ -757,9 +728,7 @@
 
 
 
-    /* =========================
-       CONTAGEM
-    ========================= */
+    /* CONTAGEM DE 15 SEGUNDOS */
 
     function iniciarContagem() {
 
@@ -813,19 +782,13 @@
 
 
 
-    /* =========================
-       VOLTAR
-    ========================= */
+    /* VOLTAR PARA O INÍCIO */
 
     function voltarInicio() {
 
 
-        // Marca o passo como concluído
-
         passosConcluidos[passoAtual] = true;
 
-
-        // Pega o botão correspondente
 
         let botao =
             document.getElementById(
@@ -833,32 +796,22 @@
             );
 
 
-        // Deixa o botão verde
-
         botao.classList.add("concluido");
 
-
-        // Adiciona o check
 
         botao.textContent =
             "✓ Botão " + passoAtual;
 
-
-        // Esconde tela de espera
 
         document
             .getElementById("telaEspera")
             .style.display = "none";
 
 
-        // Volta para a tela inicial
-
         document
             .getElementById("telaInicial")
             .style.display = "block";
 
-
-        // Verifica os três botões
 
         verificarFinalizacao();
 
@@ -866,9 +819,7 @@
 
 
 
-    /* =========================
-       VERIFICAR FINALIZAÇÃO
-    ========================= */
+    /* VERIFICAR OS 3 BOTÕES */
 
     function verificarFinalizacao() {
 
@@ -876,9 +827,7 @@
         if (
 
             passosConcluidos[1] &&
-
             passosConcluidos[2] &&
-
             passosConcluidos[3]
 
         ) {
@@ -894,9 +843,7 @@
 
 
 
-    /* =========================
-       FINALIZAR
-    ========================= */
+    /* FINALIZAR */
 
     function finalizar() {
 
@@ -914,9 +861,7 @@
 
 
 
-    /* =========================
-       COPIAR FRASE
-    ========================= */
+    /* COPIAR FRASE */
 
     function copiarFrase() {
 
