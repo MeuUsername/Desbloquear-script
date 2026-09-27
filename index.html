@@ -1,109 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Meu Site</title>
+    <title>Desbloquear</title>
 
     <style>
-
-        /* =========================
-           CONFIGURAÇÕES GERAIS
-        ========================= */
-
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: Arial, sans-serif;
-
+            margin: 0;
             min-height: 100vh;
-
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
 
-            background: linear-gradient(135deg, #0f172a, #1e40af);
+            font-family: Arial, sans-serif;
 
-            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
         }
-
-
-        /* =========================
-           CAIXA PRINCIPAL
-        ========================= */
 
         .container {
-            width: 90%;
-            max-width: 550px;
-
-            padding: 40px;
-
-            text-align: center;
-
-            background: rgba(255, 255, 255, 0.10);
-
-            border-radius: 20px;
-
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-
-            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 500px;
         }
 
-
-        /* =========================
-           TÍTULOS
-        ========================= */
+        .caixa {
+            width: 100%;
+            background: white;
+            padding: 30px 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
 
         h1 {
-            font-size: 32px;
-
-            margin-bottom: 15px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 28px;
         }
-
 
         p {
             font-size: 17px;
-
-            color: #dbeafe;
-
-            margin-bottom: 30px;
+            line-height: 1.5;
         }
-
-
-        /* =========================
-           BOTÕES
-        ========================= */
 
         .botoes {
             display: flex;
-
             flex-direction: column;
-
             gap: 15px;
+            width: 100%;
         }
-
 
         button {
             width: 100%;
-
-            padding: 16px;
+            min-height: 55px;
+            padding: 14px 20px;
 
             border: none;
+            border-radius: 12px;
 
-            border-radius: 10px;
-
-            background: #2563eb;
-
+            background: #667eea;
             color: white;
 
-            font-size: 18px;
-
+            font-size: 17px;
             font-weight: bold;
 
             cursor: pointer;
@@ -111,521 +75,365 @@
             transition: 0.2s;
         }
 
-
         button:hover {
-            background: #1d4ed8;
-
-            transform: scale(1.03);
+            transform: scale(1.02);
+            opacity: 0.95;
         }
-
 
         button:active {
             transform: scale(0.98);
         }
 
-
-        /* =========================
-           BOTÃO CONCLUÍDO
-        ========================= */
-
-        button.concluido {
-            background: #16a34a;
+        .concluido {
+            background: #28a745 !important;
         }
-
-
-        button.concluido:hover {
-            background: #15803d;
-        }
-
-
-        /* =========================
-           BOTÃO FINALIZAR
-        ========================= */
 
         #botaoFinalizar {
-            display: none;
-
-            margin-top: 25px;
-
-            background: #f59e0b;
-        }
-
-
-        #botaoFinalizar:hover {
-            background: #d97706;
-        }
-
-
-        /* =========================
-           TELA DE ESPERA
-        ========================= */
-
-        #telaEspera {
+            margin-top: 20px;
+            background: #ff9800;
             display: none;
         }
-
-
-        /* =========================
-           CONTADOR
-        ========================= */
-
-        #contador {
-            font-size: 80px;
-
-            font-weight: bold;
-
-            margin: 30px 0;
-        }
-
-
-        /* =========================
-           BOTÃO VOLTAR
-        ========================= */
 
         #botaoVoltar {
+            background: #28a745;
             display: none;
-
-            background: #16a34a;
         }
 
-
-        #botaoVoltar:hover {
-            background: #15803d;
-        }
-
-
-        /* =========================
-           TELA FINAL
-        ========================= */
-
+        #telaEspera,
         #telaFinal {
             display: none;
         }
 
+        #contador {
+            font-size: 45px;
+            font-weight: bold;
+            margin: 25px 0;
+            color: #667eea;
+        }
 
-        /* =========================
-           CAIXA DA FRASE
-        ========================= */
+        /* Tela de carregamento de 1 segundo */
+        #telaCarregamento {
+            display: none;
+        }
 
-        .caixaFrase {
-            width: 100%;
+        .spinner {
+            width: 55px;
+            height: 55px;
+            margin: 25px auto;
 
-            min-height: 120px;
+            border: 6px solid #ddd;
+            border-top: 6px solid #667eea;
+            border-radius: 50%;
 
-            padding: 20px;
+            animation: girar 1s linear infinite;
+        }
 
-            margin-bottom: 20px;
+        @keyframes girar {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
-            background: rgba(0, 0, 0, 0.25);
-
-            border: 2px solid rgba(255, 255, 255, 0.2);
-
+        .frase {
+            background: #f1f1f1;
             border-radius: 12px;
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
+            padding: 20px;
+            margin: 20px 0;
 
             font-size: 18px;
-
             line-height: 1.5;
-
-            word-break: break-word;
+            word-wrap: break-word;
         }
-
-
-        /* =========================
-           BOTÃO COPIAR
-        ========================= */
-
-        #botaoCopiar {
-            background: #7c3aed;
-        }
-
-
-        #botaoCopiar:hover {
-            background: #6d28d9;
-        }
-
-
-        /* Mensagem de copiado */
 
         #mensagemCopiado {
-            display: none;
-
-            margin-top: 15px;
-
-            color: #86efac;
-
+            color: #28a745;
             font-weight: bold;
+            margin-top: 15px;
         }
 
+        /* Ajustes para celulares */
+        @media (max-width: 600px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .caixa {
+                padding: 25px 18px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            button {
+                min-height: 58px;
+                font-size: 16px;
+            }
+
+            #contador {
+                font-size: 40px;
+            }
+        }
+
+        /* Celulares bem pequenos */
+        @media (max-width: 380px) {
+
+            body {
+                padding: 8px;
+            }
+
+            .caixa {
+                padding: 22px 14px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            button {
+                font-size: 15px;
+            }
+        }
     </style>
-
 </head>
-
 
 <body>
 
+<div class="container">
 
-    <div class="container">
+    <!-- TELA INICIAL -->
+    <div class="caixa" id="telaInicial">
 
+        <h1>Desbloquear</h1>
 
-        <!-- =====================================
-             TELA INICIAL
-        ====================================== -->
+        <p>
+            Clique nos três botões para continuar.
+        </p>
 
-        <div id="telaInicial">
+        <div class="botoes">
 
-            <h1>Meu Site</h1>
+            <button id="botao1" onclick="iniciarPasso(1)">
+                Botão 1
+            </button>
 
-            <p>
-                Complete os três passos para continuar.
-            </p>
+            <button id="botao2" onclick="iniciarPasso(2)">
+                Botão 2
+            </button>
 
-
-            <div class="botoes">
-
-                <button
-                    id="botao1"
-                    onclick="iniciarPasso(1)">
-
-                    Botão 1
-
-                </button>
-
-
-                <button
-                    id="botao2"
-                    onclick="iniciarPasso(2)">
-
-                    Botão 2
-
-                </button>
-
-
-                <button
-                    id="botao3"
-                    onclick="iniciarPasso(3)">
-
-                    Botão 3
-
-                </button>
-
-            </div>
-
-
-            <!-- BOTÃO FINALIZAR -->
-
-            <button
-                id="botaoFinalizar"
-                onclick="finalizar()">
-
-                Finalizar
-
+            <button id="botao3" onclick="iniciarPasso(3)">
+                Botão 3
             </button>
 
         </div>
 
-
-
-        <!-- =====================================
-             TELA DE ESPERA
-        ====================================== -->
-
-        <div id="telaEspera">
-
-            <h1>Aguarde</h1>
-
-            <p>
-                Espere 15 segundos para concluir este passo.
-            </p>
-
-
-            <div id="contador">
-                15
-            </div>
-
-
-            <button
-                id="botaoVoltar"
-                onclick="voltarInicio()">
-
-                ✓ Voltar
-
-            </button>
-
-        </div>
-
-
-
-        <!-- =====================================
-             TELA FINAL
-        ====================================== -->
-
-        <div id="telaFinal">
-
-            <h1>Finalizado!</h1>
-
-            <p>
-                Sua frase está abaixo:
-            </p>
-
-
-            <!-- CAIXA COM A FRASE -->
-
-            <div
-                class="caixaFrase"
-                id="frase">
-
-                Parabéns! Você concluiu todos os passos.
-
-            </div>
-
-
-            <!-- BOTÃO COPIAR -->
-
-            <button
-                id="botaoCopiar"
-                onclick="copiarFrase()">
-
-                📋 Copiar
-
-            </button>
-
-
-            <!-- MENSAGEM DE CONFIRMAÇÃO -->
-
-            <div id="mensagemCopiado">
-
-                ✓ Frase copiada!
-
-            </div>
-
-        </div>
-
+        <button id="botaoFinalizar" onclick="finalizar()">
+            Finalizar
+        </button>
 
     </div>
 
 
+    <!-- TELA DE CARREGAMENTO -->
+    <div class="caixa" id="telaCarregamento">
 
-    <script>
+        <h1>Carregando...</h1>
 
-        /* =====================================
-           VARIÁVEIS
-        ====================================== */
+        <div class="spinner"></div>
+
+        <p>
+            Aguarde um momento...
+        </p>
+
+    </div>
+
+
+    <!-- TELA DE ESPERA -->
+    <div class="caixa" id="telaEspera">
+
+        <h1>Aguarde</h1>
+
+        <p>
+            O processo está acontecendo...
+        </p>
+
+        <div id="contador">
+            15
+        </div>
+
+        <p>
+            segundos restantes
+        </p>
+
+        <button id="botaoVoltar" onclick="voltarInicio()">
+            Voltar
+        </button>
+
+    </div>
+
+
+    <!-- TELA FINAL -->
+    <div class="caixa" id="telaFinal">
+
+        <h1>Concluído!</h1>
+
+        <div class="frase" id="frase">
+            Parabéns! Você concluiu todos os passos.
+        </div>
+
+        <button onclick="copiarFrase()">
+            Copiar
+        </button>
+
+        <p id="mensagemCopiado"></p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let passoAtual = 0;
+
+    let passosConcluidos = {
+        1: false,
+        2: false,
+        3: false
+    };
+
+
+    // Inicia um botão
+    function iniciarPasso(numero) {
+
+        // Se já foi concluído, não faz nada
+        if (passosConcluidos[numero]) {
+            return;
+        }
+
+        passoAtual = numero;
+
+        // Esconde a tela inicial
+        document.getElementById("telaInicial").style.display = "none";
+
+        // Mostra o carregamento
+        document.getElementById("telaCarregamento").style.display = "block";
+
+        // Carregamento de 1 segundo
+        setTimeout(function() {
+
+            // Esconde carregamento
+            document.getElementById("telaCarregamento").style.display = "none";
+
+            // Mostra tela de espera
+            document.getElementById("telaEspera").style.display = "block";
+
+            iniciarContagem();
+
+        }, 1000);
+    }
+
+
+    // Contagem de 15 segundos
+    function iniciarContagem() {
 
         let tempo = 15;
 
-        let intervalo;
+        document.getElementById("contador").textContent = tempo;
 
-        let passoAtual;
+        document.getElementById("botaoVoltar").style.display = "none";
 
-        // Guarda os passos concluídos
-        let passosConcluidos = {
-            1: false,
-            2: false,
-            3: false
-        };
+        let intervalo = setInterval(function() {
 
+            tempo--;
 
+            document.getElementById("contador").textContent = tempo;
 
-        /* =====================================
-           INICIAR UM PASSO
-        ====================================== */
+            if (tempo <= 0) {
 
-        function iniciarPasso(numero) {
+                clearInterval(intervalo);
 
-            // Guarda qual passo foi escolhido
-            passoAtual = numero;
+                document.getElementById("contador").textContent = "✓";
 
-
-            // Esconde a tela inicial
-            document.getElementById("telaInicial").style.display =
-                "none";
-
-
-            // Mostra a tela de espera
-            document.getElementById("telaEspera").style.display =
-                "block";
-
-
-            // Começa novamente em 15
-            tempo = 15;
-
-
-            // Mostra 15
-            document.getElementById("contador").textContent =
-                tempo;
-
-
-            // Esconde o botão voltar
-            document.getElementById("botaoVoltar").style.display =
-                "none";
-
-
-            // Cancela contador anterior
-            clearInterval(intervalo);
-
-
-            // Começa a contagem
-            intervalo = setInterval(function() {
-
-                tempo--;
-
-
-                // Atualiza o contador
-                document.getElementById("contador").textContent =
-                    tempo;
-
-
-                // Quando chegar em zero
-                if (tempo <= 0) {
-
-                    clearInterval(intervalo);
-
-
-                    // Mostra pronto
-                    document.getElementById("contador").textContent =
-                        "Pronto!";
-
-
-                    // Mostra botão voltar
-                    document.getElementById("botaoVoltar").style.display =
-                        "block";
-
-                }
-
-            }, 1000);
-
-        }
-
-
-
-        /* =====================================
-           VOLTAR PARA A TELA INICIAL
-        ====================================== */
-
-        function voltarInicio() {
-
-            // Para o contador
-            clearInterval(intervalo);
-
-
-            // Marca o passo como concluído
-            passosConcluidos[passoAtual] = true;
-
-
-            // Procura o botão correspondente
-            let botao = document.getElementById(
-                "botao" + passoAtual
-            );
-
-
-            // Deixa o botão verde
-            botao.classList.add("concluido");
-
-
-            // Adiciona o certinho
-            botao.textContent =
-                "✓ Botão " + passoAtual;
-
-
-            // Esconde a tela de espera
-            document.getElementById("telaEspera").style.display =
-                "none";
-
-
-            // Mostra a tela inicial
-            document.getElementById("telaInicial").style.display =
-                "block";
-
-
-            // Verifica se os três foram concluídos
-            verificarFinalizacao();
-
-        }
-
-
-
-        /* =====================================
-           VERIFICAR SE OS 3 FORAM CONCLUÍDOS
-        ====================================== */
-
-        function verificarFinalizacao() {
-
-            if (
-                passosConcluidos[1] &&
-                passosConcluidos[2] &&
-                passosConcluidos[3]
-            ) {
-
-                // Mostra o botão Finalizar
-                document.getElementById("botaoFinalizar").style.display =
-                    "block";
-
+                document.getElementById("botaoVoltar").style.display = "block";
             }
 
+        }, 1000);
+    }
+
+
+    // Voltar para a tela inicial
+    function voltarInicio() {
+
+        // Marca o botão como concluído
+        passosConcluidos[passoAtual] = true;
+
+        let botao = document.getElementById("botao" + passoAtual);
+
+        botao.classList.add("concluido");
+
+        botao.textContent = "✓ Botão " + passoAtual;
+
+        // Esconde tela de espera
+        document.getElementById("telaEspera").style.display = "none";
+
+        // Mostra tela inicial
+        document.getElementById("telaInicial").style.display = "block";
+
+        // Verifica se todos foram concluídos
+        verificarFinalizacao();
+    }
+
+
+    // Verifica se os três botões foram concluídos
+    function verificarFinalizacao() {
+
+        if (
+            passosConcluidos[1] &&
+            passosConcluidos[2] &&
+            passosConcluidos[3]
+        ) {
+
+            document.getElementById("botaoFinalizar").style.display = "block";
         }
+    }
 
 
+    // Finalizar
+    function finalizar() {
 
-        /* =====================================
-           FINALIZAR
-        ====================================== */
+        document.getElementById("telaInicial").style.display = "none";
 
-        function finalizar() {
-
-            // Esconde a tela inicial
-            document.getElementById("telaInicial").style.display =
-                "none";
+        document.getElementById("telaFinal").style.display = "block";
+    }
 
 
-            // Mostra a tela final
-            document.getElementById("telaFinal").style.display =
-                "block";
+    // Copiar frase
+    function copiarFrase() {
 
-        }
+        let frase = document.getElementById("frase").textContent;
 
+        navigator.clipboard.writeText(frase)
+            .then(function() {
 
+                document.getElementById("mensagemCopiado").textContent =
+                    "✓ Frase copiada!";
 
-        /* =====================================
-           COPIAR A FRASE
-        ====================================== */
+            })
+            .catch(function() {
 
-        function copiarFrase() {
+                document.getElementById("mensagemCopiado").textContent =
+                    "Não foi possível copiar.";
 
-            // Pega o texto da caixa
-            let texto =
-                document.getElementById("frase").innerText;
+            });
+    }
 
-
-            // Copia para a área de transferência
-            navigator.clipboard.writeText(texto)
-                .then(function() {
-
-                    // Mostra mensagem
-                    document.getElementById(
-                        "mensagemCopiado"
-                    ).style.display = "block";
-
-                })
-                .catch(function() {
-
-                    // Caso o navegador bloqueie a cópia
-                    alert(
-                        "Não foi possível copiar automaticamente."
-                    );
-
-                });
-
-        }
-
-    </script>
-
+</script>
 
 </body>
-
 </html>
