@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,244 +8,586 @@
     <title>Desbloquear</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
+        /* =========================
+           FUNDO ESPACIAL
+        ========================= */
+
         body {
             margin: 0;
             min-height: 100vh;
+
             display: flex;
             justify-content: center;
             align-items: center;
+
             padding: 20px;
 
             font-family: Arial, sans-serif;
 
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background:
+                radial-gradient(
+                    circle at 20% 20%,
+                    rgba(80, 60, 150, 0.25) 0,
+                    transparent 25%
+                ),
+
+                radial-gradient(
+                    circle at 80% 70%,
+                    rgba(30, 70, 140, 0.25) 0,
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at 50% 100%,
+                    rgba(90, 30, 120, 0.20) 0,
+                    transparent 35%
+                ),
+
+                #03030b;
+
+            position: relative;
+
+            overflow: hidden;
         }
+
+
+        /* =========================
+           ESTRELAS
+        ========================= */
+
+        body::before {
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            background-image:
+
+                radial-gradient(
+                    2px 2px at 10% 20%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    1px 1px at 20% 80%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    2px 2px at 30% 40%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    1px 1px at 40% 15%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    2px 2px at 50% 70%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    1px 1px at 60% 30%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    2px 2px at 70% 85%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    1px 1px at 80% 15%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    2px 2px at 90% 55%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    1px 1px at 15% 55%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    1px 1px at 75% 45%,
+                    white,
+                    transparent
+                ),
+
+                radial-gradient(
+                    2px 2px at 45% 90%,
+                    white,
+                    transparent
+                );
+
+            pointer-events: none;
+
+            opacity: 0.8;
+        }
+
+
+        /* =========================
+           CONTAINER
+        ========================= */
 
         .container {
             width: 100%;
+
             max-width: 500px;
+
+            position: relative;
+
+            z-index: 2;
         }
+
+
+        /* =========================
+           CAIXA PRINCIPAL
+        ========================= */
 
         .caixa {
             width: 100%;
-            background: white;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20, 20, 45, 0.96),
+                    rgba(8, 8, 20, 0.96)
+                );
+
             padding: 30px 25px;
+
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+            border: 1px solid rgba(130, 110, 255, 0.25);
+
+            box-shadow:
+                0 0 30px rgba(70, 50, 160, 0.25),
+                0 15px 40px rgba(0, 0, 0, 0.5);
+
             text-align: center;
+
+            color: white;
         }
+
+
+        /* =========================
+           TÍTULOS
+        ========================= */
 
         h1 {
             margin-top: 0;
+
             margin-bottom: 25px;
+
             font-size: 28px;
+
+            color: #ffffff;
+
+            text-shadow:
+                0 0 10px rgba(120, 100, 255, 0.6);
         }
+
 
         p {
             font-size: 17px;
+
             line-height: 1.5;
+
+            color: #d8d8e8;
         }
+
+
+        /* =========================
+           BOTÕES
+        ========================= */
 
         .botoes {
             display: flex;
+
             flex-direction: column;
+
             gap: 15px;
+
             width: 100%;
         }
 
+
         button {
             width: 100%;
+
             min-height: 55px;
+
             padding: 14px 20px;
 
             border: none;
+
             border-radius: 12px;
 
-            background: #667eea;
+            background:
+                linear-gradient(
+                    135deg,
+                    #5968ff,
+                    #754cff
+                );
+
             color: white;
 
             font-size: 17px;
+
             font-weight: bold;
 
             cursor: pointer;
 
-            transition: 0.2s;
+            box-shadow:
+                0 5px 15px rgba(70, 60, 200, 0.3);
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                opacity 0.2s;
         }
 
+
         button:hover {
-            transform: scale(1.02);
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(90, 70, 255, 0.45);
+
             opacity: 0.95;
         }
 
+
         button:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
+
+        /* =========================
+           BOTÃO CONCLUÍDO
+        ========================= */
+
         .concluido {
-            background: #28a745 !important;
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #22c55e
+                ) !important;
+
+            box-shadow:
+                0 5px 18px rgba(30, 200, 90, 0.3);
         }
+
+
+        /* =========================
+           FINALIZAR
+        ========================= */
 
         #botaoFinalizar {
             margin-top: 20px;
-            background: #ff9800;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff8a00,
+                    #ff5500
+                );
+
             display: none;
         }
+
+
+        /* =========================
+           BOTÃO VOLTAR
+        ========================= */
 
         #botaoVoltar {
-            background: #28a745;
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #22c55e
+                );
+
             display: none;
         }
+
+
+        /* =========================
+           TELAS
+        ========================= */
 
         #telaEspera,
-        #telaFinal {
-            display: none;
-        }
-
-        #contador {
-            font-size: 45px;
-            font-weight: bold;
-            margin: 25px 0;
-            color: #667eea;
-        }
-
-        /* Tela de carregamento de 1 segundo */
+        #telaFinal,
         #telaCarregamento {
             display: none;
         }
 
-        .spinner {
-            width: 55px;
-            height: 55px;
-            margin: 25px auto;
 
-            border: 6px solid #ddd;
-            border-top: 6px solid #667eea;
-            border-radius: 50%;
+        /* =========================
+           CONTADOR
+        ========================= */
 
-            animation: girar 1s linear infinite;
+        #contador {
+            font-size: 50px;
+
+            font-weight: bold;
+
+            margin: 25px 0;
+
+            color: #7d8aff;
+
+            text-shadow:
+                0 0 15px rgba(100, 100, 255, 0.6);
         }
 
+
+        /* =========================
+           CARREGAMENTO
+        ========================= */
+
+        .spinner {
+            width: 60px;
+
+            height: 60px;
+
+            margin: 25px auto;
+
+            border: 6px solid rgba(255, 255, 255, 0.15);
+
+            border-top: 6px solid #7582ff;
+
+            border-radius: 50%;
+
+            animation:
+                girar 1s linear infinite;
+
+            box-shadow:
+                0 0 15px rgba(100, 100, 255, 0.4);
+        }
+
+
         @keyframes girar {
+
             100% {
                 transform: rotate(360deg);
             }
+
         }
 
+
+        /* =========================
+           FRASE FINAL
+        ========================= */
+
         .frase {
-            background: #f1f1f1;
+            background:
+                rgba(255, 255, 255, 0.06);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.1);
+
             border-radius: 12px;
+
             padding: 20px;
+
             margin: 20px 0;
 
             font-size: 18px;
+
             line-height: 1.5;
+
             word-wrap: break-word;
+
+            color: #eeeeff;
         }
 
+
         #mensagemCopiado {
-            color: #28a745;
+            color: #4ade80;
+
             font-weight: bold;
+
             margin-top: 15px;
         }
 
-        /* Ajustes para celulares */
+
+        /* =========================
+           CELULAR
+        ========================= */
+
         @media (max-width: 600px) {
 
             body {
                 padding: 12px;
             }
 
+
             .caixa {
                 padding: 25px 18px;
+
                 border-radius: 16px;
             }
+
 
             h1 {
                 font-size: 24px;
             }
 
+
             p {
                 font-size: 16px;
             }
 
+
             button {
                 min-height: 58px;
+
                 font-size: 16px;
             }
 
+
             #contador {
-                font-size: 40px;
+                font-size: 42px;
             }
+
         }
 
-        /* Celulares bem pequenos */
+
+        /* =========================
+           CELULARES PEQUENOS
+        ========================= */
+
         @media (max-width: 380px) {
 
             body {
                 padding: 8px;
             }
 
+
             .caixa {
                 padding: 22px 14px;
             }
+
 
             h1 {
                 font-size: 22px;
             }
 
+
             button {
                 font-size: 15px;
             }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
 
-    <!-- TELA INICIAL -->
+
+    <!-- =========================
+         TELA INICIAL
+    ========================= -->
+
     <div class="caixa" id="telaInicial">
 
-        <h1>Desbloquear</h1>
+        <h1>
+            Desbloquear
+        </h1>
+
 
         <p>
             Clique nos três botões para continuar.
         </p>
 
+
         <div class="botoes">
 
-            <button id="botao1" onclick="iniciarPasso(1)">
+
+            <button
+                id="botao1"
+                onclick="iniciarPasso(1)"
+            >
                 Botão 1
             </button>
 
-            <button id="botao2" onclick="iniciarPasso(2)">
+
+            <button
+                id="botao2"
+                onclick="iniciarPasso(2)"
+            >
                 Botão 2
             </button>
 
-            <button id="botao3" onclick="iniciarPasso(3)">
+
+            <button
+                id="botao3"
+                onclick="iniciarPasso(3)"
+            >
                 Botão 3
             </button>
 
+
         </div>
 
-        <button id="botaoFinalizar" onclick="finalizar()">
+
+        <button
+            id="botaoFinalizar"
+            onclick="finalizar()"
+        >
             Finalizar
         </button>
+
 
     </div>
 
 
-    <!-- TELA DE CARREGAMENTO -->
-    <div class="caixa" id="telaCarregamento">
+    <!-- =========================
+         TELA DE CARREGAMENTO
+    ========================= -->
 
-        <h1>Carregando...</h1>
+    <div
+        class="caixa"
+        id="telaCarregamento"
+    >
+
+        <h1>
+            Carregando...
+        </h1>
+
 
         <div class="spinner"></div>
+
 
         <p>
             Aguarde um momento...
@@ -253,187 +596,368 @@
     </div>
 
 
-    <!-- TELA DE ESPERA -->
-    <div class="caixa" id="telaEspera">
+    <!-- =========================
+         TELA DE ESPERA
+    ========================= -->
 
-        <h1>Aguarde</h1>
+    <div
+        class="caixa"
+        id="telaEspera"
+    >
+
+        <h1>
+            Aguarde
+        </h1>
+
 
         <p>
             O processo está acontecendo...
         </p>
 
+
         <div id="contador">
             15
         </div>
+
 
         <p>
             segundos restantes
         </p>
 
-        <button id="botaoVoltar" onclick="voltarInicio()">
+
+        <button
+            id="botaoVoltar"
+            onclick="voltarInicio()"
+        >
             Voltar
         </button>
+
 
     </div>
 
 
-    <!-- TELA FINAL -->
-    <div class="caixa" id="telaFinal">
+    <!-- =========================
+         TELA FINAL
+    ========================= -->
 
-        <h1>Concluído!</h1>
+    <div
+        class="caixa"
+        id="telaFinal"
+    >
 
-        <div class="frase" id="frase">
+        <h1>
+            Concluído!
+        </h1>
+
+
+        <div
+            class="frase"
+            id="frase"
+        >
             Parabéns! Você concluiu todos os passos.
         </div>
+
 
         <button onclick="copiarFrase()">
             Copiar
         </button>
 
+
         <p id="mensagemCopiado"></p>
 
+
     </div>
+
 
 </div>
 
 
+
 <script>
+
+
+    /* =========================
+       VARIÁVEIS
+    ========================= */
 
     let passoAtual = 0;
 
+
     let passosConcluidos = {
+
         1: false,
+
         2: false,
+
         3: false
+
     };
 
 
-    // Inicia um botão
+
+    /* =========================
+       INICIAR PASSO
+    ========================= */
+
     function iniciarPasso(numero) {
 
-        // Se já foi concluído, não faz nada
+
+        // Não permite clicar novamente
+        // em um botão já concluído
+
         if (passosConcluidos[numero]) {
+
             return;
+
         }
+
 
         passoAtual = numero;
 
-        // Esconde a tela inicial
-        document.getElementById("telaInicial").style.display = "none";
 
-        // Mostra o carregamento
-        document.getElementById("telaCarregamento").style.display = "block";
+        // Esconde tela inicial
 
-        // Carregamento de 1 segundo
+        document
+            .getElementById("telaInicial")
+            .style.display = "none";
+
+
+        // Mostra carregamento
+
+        document
+            .getElementById("telaCarregamento")
+            .style.display = "block";
+
+
+        // Espera 1 segundo
+
         setTimeout(function() {
 
-            // Esconde carregamento
-            document.getElementById("telaCarregamento").style.display = "none";
 
-            // Mostra tela de espera
-            document.getElementById("telaEspera").style.display = "block";
+            // Esconde carregamento
+
+            document
+                .getElementById("telaCarregamento")
+                .style.display = "none";
+
+
+            // Mostra tela dos 15 segundos
+
+            document
+                .getElementById("telaEspera")
+                .style.display = "block";
+
 
             iniciarContagem();
 
+
         }, 1000);
+
     }
 
 
-    // Contagem de 15 segundos
+
+    /* =========================
+       CONTAGEM
+    ========================= */
+
     function iniciarContagem() {
+
 
         let tempo = 15;
 
-        document.getElementById("contador").textContent = tempo;
 
-        document.getElementById("botaoVoltar").style.display = "none";
+        document
+            .getElementById("contador")
+            .textContent = tempo;
+
+
+        document
+            .getElementById("botaoVoltar")
+            .style.display = "none";
+
 
         let intervalo = setInterval(function() {
 
+
             tempo--;
 
-            document.getElementById("contador").textContent = tempo;
+
+            document
+                .getElementById("contador")
+                .textContent = tempo;
+
 
             if (tempo <= 0) {
 
+
                 clearInterval(intervalo);
 
-                document.getElementById("contador").textContent = "✓";
 
-                document.getElementById("botaoVoltar").style.display = "block";
+                document
+                    .getElementById("contador")
+                    .textContent = "✓";
+
+
+                document
+                    .getElementById("botaoVoltar")
+                    .style.display = "block";
+
+
             }
 
+
         }, 1000);
+
     }
 
 
-    // Voltar para a tela inicial
+
+    /* =========================
+       VOLTAR
+    ========================= */
+
     function voltarInicio() {
 
-        // Marca o botão como concluído
+
+        // Marca o passo como concluído
+
         passosConcluidos[passoAtual] = true;
 
-        let botao = document.getElementById("botao" + passoAtual);
+
+        // Pega o botão correspondente
+
+        let botao =
+            document.getElementById(
+                "botao" + passoAtual
+            );
+
+
+        // Deixa o botão verde
 
         botao.classList.add("concluido");
 
-        botao.textContent = "✓ Botão " + passoAtual;
+
+        // Adiciona o check
+
+        botao.textContent =
+            "✓ Botão " + passoAtual;
+
 
         // Esconde tela de espera
-        document.getElementById("telaEspera").style.display = "none";
 
-        // Mostra tela inicial
-        document.getElementById("telaInicial").style.display = "block";
+        document
+            .getElementById("telaEspera")
+            .style.display = "none";
 
-        // Verifica se todos foram concluídos
+
+        // Volta para a tela inicial
+
+        document
+            .getElementById("telaInicial")
+            .style.display = "block";
+
+
+        // Verifica os três botões
+
         verificarFinalizacao();
+
     }
 
 
-    // Verifica se os três botões foram concluídos
+
+    /* =========================
+       VERIFICAR FINALIZAÇÃO
+    ========================= */
+
     function verificarFinalizacao() {
 
+
         if (
+
             passosConcluidos[1] &&
+
             passosConcluidos[2] &&
+
             passosConcluidos[3]
+
         ) {
 
-            document.getElementById("botaoFinalizar").style.display = "block";
+
+            document
+                .getElementById("botaoFinalizar")
+                .style.display = "block";
+
         }
+
     }
 
 
-    // Finalizar
+
+    /* =========================
+       FINALIZAR
+    ========================= */
+
     function finalizar() {
 
-        document.getElementById("telaInicial").style.display = "none";
 
-        document.getElementById("telaFinal").style.display = "block";
+        document
+            .getElementById("telaInicial")
+            .style.display = "none";
+
+
+        document
+            .getElementById("telaFinal")
+            .style.display = "block";
+
     }
 
 
-    // Copiar frase
+
+    /* =========================
+       COPIAR FRASE
+    ========================= */
+
     function copiarFrase() {
 
-        let frase = document.getElementById("frase").textContent;
 
-        navigator.clipboard.writeText(frase)
+        let frase =
+            document.getElementById("frase").textContent;
+
+
+        navigator.clipboard
+            .writeText(frase)
+
+
             .then(function() {
 
-                document.getElementById("mensagemCopiado").textContent =
+
+                document
+                    .getElementById("mensagemCopiado")
+                    .textContent =
                     "✓ Frase copiada!";
 
+
             })
+
+
             .catch(function() {
 
-                document.getElementById("mensagemCopiado").textContent =
+
+                document
+                    .getElementById("mensagemCopiado")
+                    .textContent =
                     "Não foi possível copiar.";
 
+
             });
+
     }
+
 
 </script>
 
+
 </body>
+
 </html>
