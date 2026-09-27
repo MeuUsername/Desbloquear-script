@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Meu Site</title>
+
+    <style>
+
+        /* =========================
+           CONFIGURAÇÕES GERAIS
+        ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: linear-gradient(135deg, #0f172a, #1e40af);
+
+            color: white;
+        }
+
+
+        /* =========================
+           CAIXA PRINCIPAL
+        ========================= */
+
+        .container {
+            width: 90%;
+            max-width: 550px;
+
+            padding: 40px;
+
+            text-align: center;
+
+            background: rgba(255, 255, 255, 0.10);
+
+            border-radius: 20px;
+
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+
+            backdrop-filter: blur(10px);
+        }
+
+
+        /* =========================
+           TÍTULOS
+        ========================= */
+
+        h1 {
+            font-size: 32px;
+
+            margin-bottom: 15px;
+        }
+
+
+        p {
+            font-size: 17px;
+
+            color: #dbeafe;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* =========================
+           BOTÕES
+        ========================= */
+
+        .botoes {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+
+        button {
+            width: 100%;
+
+            padding: 16px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        button:hover {
+            background: #1d4ed8;
+
+            transform: scale(1.03);
+        }
+
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+
+        /* =========================
+           BOTÃO CONCLUÍDO
+        ========================= */
+
+        button.concluido {
+            background: #16a34a;
+        }
+
+
+        button.concluido:hover {
+            background: #15803d;
+        }
+
+
+        /* =========================
+           BOTÃO FINALIZAR
+        ========================= */
+
+        #botaoFinalizar {
+            display: none;
+
+            margin-top: 25px;
+
+            background: #f59e0b;
+        }
+
+
+        #botaoFinalizar:hover {
+            background: #d97706;
+        }
+
+
+        /* =========================
+           TELA DE ESPERA
+        ========================= */
+
+        #telaEspera {
+            display: none;
+        }
+
+
+        /* =========================
+           CONTADOR
+        ========================= */
+
+        #contador {
+            font-size: 80px;
+
+            font-weight: bold;
+
+            margin: 30px 0;
+        }
+
+
+        /* =========================
+           BOTÃO VOLTAR
+        ========================= */
+
+        #botaoVoltar {
+            display: none;
+
+            background: #16a34a;
+        }
+
+
+        #botaoVoltar:hover {
+            background: #15803d;
+        }
+
+
+        /* =========================
+           TELA FINAL
+        ========================= */
+
+        #telaFinal {
+            display: none;
+        }
+
+
+        /* =========================
+           CAIXA DA FRASE
+        ========================= */
+
+        .caixaFrase {
+            width: 100%;
+
+            min-height: 120px;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+
+            background: rgba(0, 0, 0, 0.25);
+
+            border: 2px solid rgba(255, 255, 255, 0.2);
+
+            border-radius: 12px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 18px;
+
+            line-height: 1.5;
+
+            word-break: break-word;
+        }
+
+
+        /* =========================
+           BOTÃO COPIAR
+        ========================= */
+
+        #botaoCopiar {
+            background: #7c3aed;
+        }
+
+
+        #botaoCopiar:hover {
+            background: #6d28d9;
+        }
+
+
+        /* Mensagem de copiado */
+
+        #mensagemCopiado {
+            display: none;
+
+            margin-top: 15px;
+
+            color: #86efac;
+
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="container">
+
+
+        <!-- =====================================
+             TELA INICIAL
+        ====================================== -->
+
+        <div id="telaInicial">
+
+            <h1>Meu Site</h1>
+
+            <p>
+                Complete os três passos para continuar.
+            </p>
+
+
+            <div class="botoes">
+
+                <button
+                    id="botao1"
+                    onclick="iniciarPasso(1)">
+
+                    Botão 1
+
+                </button>
+
+
+                <button
+                    id="botao2"
+                    onclick="iniciarPasso(2)">
+
+                    Botão 2
+
+                </button>
+
+
+                <button
+                    id="botao3"
+                    onclick="iniciarPasso(3)">
+
+                    Botão 3
+
+                </button>
+
+            </div>
+
+
+            <!-- BOTÃO FINALIZAR -->
+
+            <button
+                id="botaoFinalizar"
+                onclick="finalizar()">
+
+                Finalizar
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =====================================
+             TELA DE ESPERA
+        ====================================== -->
+
+        <div id="telaEspera">
+
+            <h1>Aguarde</h1>
+
+            <p>
+                Espere 15 segundos para concluir este passo.
+            </p>
+
+
+            <div id="contador">
+                15
+            </div>
+
+
+            <button
+                id="botaoVoltar"
+                onclick="voltarInicio()">
+
+                ✓ Voltar
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =====================================
+             TELA FINAL
+        ====================================== -->
+
+        <div id="telaFinal">
+
+            <h1>Finalizado!</h1>
+
+            <p>
+                Sua frase está abaixo:
+            </p>
+
+
+            <!-- CAIXA COM A FRASE -->
+
+            <div
+                class="caixaFrase"
+                id="frase">
+
+                Parabéns! Você concluiu todos os passos.
+
+            </div>
+
+
+            <!-- BOTÃO COPIAR -->
+
+            <button
+                id="botaoCopiar"
+                onclick="copiarFrase()">
+
+                📋 Copiar
+
+            </button>
+
+
+            <!-- MENSAGEM DE CONFIRMAÇÃO -->
+
+            <div id="mensagemCopiado">
+
+                ✓ Frase copiada!
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+        /* =====================================
+           VARIÁVEIS
+        ====================================== */
+
+        let tempo = 15;
+
+        let intervalo;
+
+        let passoAtual;
+
+        // Guarda os passos concluídos
+        let passosConcluidos = {
+            1: false,
+            2: false,
+            3: false
+        };
+
+
+
+        /* =====================================
+           INICIAR UM PASSO
+        ====================================== */
+
+        function iniciarPasso(numero) {
+
+            // Guarda qual passo foi escolhido
+            passoAtual = numero;
+
+
+            // Esconde a tela inicial
+            document.getElementById("telaInicial").style.display =
+                "none";
+
+
+            // Mostra a tela de espera
+            document.getElementById("telaEspera").style.display =
+                "block";
+
+
+            // Começa novamente em 15
+            tempo = 15;
+
+
+            // Mostra 15
+            document.getElementById("contador").textContent =
+                tempo;
+
+
+            // Esconde o botão voltar
+            document.getElementById("botaoVoltar").style.display =
+                "none";
+
+
+            // Cancela contador anterior
+            clearInterval(intervalo);
+
+
+            // Começa a contagem
+            intervalo = setInterval(function() {
+
+                tempo--;
+
+
+                // Atualiza o contador
+                document.getElementById("contador").textContent =
+                    tempo;
+
+
+                // Quando chegar em zero
+                if (tempo <= 0) {
+
+                    clearInterval(intervalo);
+
+
+                    // Mostra pronto
+                    document.getElementById("contador").textContent =
+                        "Pronto!";
+
+
+                    // Mostra botão voltar
+                    document.getElementById("botaoVoltar").style.display =
+                        "block";
+
+                }
+
+            }, 1000);
+
+        }
+
+
+
+        /* =====================================
+           VOLTAR PARA A TELA INICIAL
+        ====================================== */
+
+        function voltarInicio() {
+
+            // Para o contador
+            clearInterval(intervalo);
+
+
+            // Marca o passo como concluído
+            passosConcluidos[passoAtual] = true;
+
+
+            // Procura o botão correspondente
+            let botao = document.getElementById(
+                "botao" + passoAtual
+            );
+
+
+            // Deixa o botão verde
+            botao.classList.add("concluido");
+
+
+            // Adiciona o certinho
+            botao.textContent =
+                "✓ Botão " + passoAtual;
+
+
+            // Esconde a tela de espera
+            document.getElementById("telaEspera").style.display =
+                "none";
+
+
+            // Mostra a tela inicial
+            document.getElementById("telaInicial").style.display =
+                "block";
+
+
+            // Verifica se os três foram concluídos
+            verificarFinalizacao();
+
+        }
+
+
+
+        /* =====================================
+           VERIFICAR SE OS 3 FORAM CONCLUÍDOS
+        ====================================== */
+
+        function verificarFinalizacao() {
+
+            if (
+                passosConcluidos[1] &&
+                passosConcluidos[2] &&
+                passosConcluidos[3]
+            ) {
+
+                // Mostra o botão Finalizar
+                document.getElementById("botaoFinalizar").style.display =
+                    "block";
+
+            }
+
+        }
+
+
+
+        /* =====================================
+           FINALIZAR
+        ====================================== */
+
+        function finalizar() {
+
+            // Esconde a tela inicial
+            document.getElementById("telaInicial").style.display =
+                "none";
+
+
+            // Mostra a tela final
+            document.getElementById("telaFinal").style.display =
+                "block";
+
+        }
+
+
+
+        /* =====================================
+           COPIAR A FRASE
+        ====================================== */
+
+        function copiarFrase() {
+
+            // Pega o texto da caixa
+            let texto =
+                document.getElementById("frase").innerText;
+
+
+            // Copia para a área de transferência
+            navigator.clipboard.writeText(texto)
+                .then(function() {
+
+                    // Mostra mensagem
+                    document.getElementById(
+                        "mensagemCopiado"
+                    ).style.display = "block";
+
+                })
+                .catch(function() {
+
+                    // Caso o navegador bloqueie a cópia
+                    alert(
+                        "Não foi possível copiar automaticamente."
+                    );
+
+                });
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
